@@ -1,12 +1,15 @@
 #!/usr/bin/env bash
 # No caller-supplied paths, database names, shell fragments or options.
-set -euo pipefail
+set -Eeuo pipefail
 [[ $# == 0 ]] || { echo 'This command accepts no arguments.' >&2; exit 2; }
+# shellcheck source=deploy/common.sh
 source "$(dirname -- "$0")/common.sh"
 umask 077
 [[ "$(cat "$ROOT/.runtime/DEPLOYMENT_ID")" == inspection_public ]]
 exec 9>"$ROOT/.runtime/reset.lock"
 flock -n 9 || { echo 'A reset is already running.' >&2; exit 3; }
+# Generated root-owned values, deliberately absent from source control.
+# shellcheck disable=SC1091
 source "$ROOT/.runtime/secrets.env"
 old_renamed=0
 new_renamed=0
@@ -46,7 +49,7 @@ files switch
 compose up -d web
 echo 'PHASE Checking the restored service'
 ready=0
-for attempt in $(seq 1 50); do
+for _ in $(seq 1 50); do
   if curl --noproxy '*' --fail --silent --max-time 4 "http://${ODOO_BIND_IP}:8076/web/login" >/dev/null; then ready=1; break; fi
   sleep 2
 done
