@@ -22,7 +22,10 @@ rollback() {
     echo 'PHASE Restoring previous demonstration'
     compose stop web || true
     if [[ $new_renamed == 1 ]]; then psql_admin -c 'DROP DATABASE IF EXISTS inspection_demo WITH (FORCE);' || true; fi
-    if [[ $old_renamed == 1 ]]; then psql_admin -c 'ALTER DATABASE inspection_previous RENAME TO inspection_demo;' || true; fi
+    if [[ $old_renamed == 1 ]]; then
+      psql_admin -c 'ALTER DATABASE inspection_previous RENAME TO inspection_demo;' || true
+      psql_admin -c 'ALTER DATABASE inspection_demo ALLOW_CONNECTIONS true;' || true
+    fi
     if [[ $files_switched == 1 ]]; then files rollback || true; fi
     compose up -d web || true
   fi
@@ -41,6 +44,7 @@ psql_admin -c 'DROP DATABASE IF EXISTS inspection_previous WITH (FORCE);'
 if psql_admin -Atc "SELECT 1 FROM pg_database WHERE datname='inspection_demo'" | grep -qx 1; then
   psql_admin -c 'ALTER DATABASE inspection_demo RENAME TO inspection_previous;'
   old_renamed=1
+  psql_admin -c 'ALTER DATABASE inspection_previous ALLOW_CONNECTIONS false;'
 fi
 psql_admin -c 'ALTER DATABASE inspection_next RENAME TO inspection_demo;'
 new_renamed=1

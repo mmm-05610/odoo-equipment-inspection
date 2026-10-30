@@ -46,6 +46,7 @@ def job():
 
 class Handler(BaseHTTPRequestHandler):
     server_version='DemoPortal'
+    sys_version=''
     def log_message(self,fmt,*args):
         # Do not log cookies, tokens, body data or account credentials.
         print('%s %s'%(self.address_string(),fmt%args),flush=True)
@@ -55,7 +56,10 @@ class Handler(BaseHTTPRequestHandler):
         self.send_response(code)
         self.send_header('Content-Type',kind);self.send_header('Content-Length',str(len(data)))
         self.send_header('Cache-Control','no-store');self.send_header('X-Content-Type-Options','nosniff')
-        self.send_header('X-Frame-Options','DENY');self.end_headers();self.wfile.write(data)
+        self.send_header('X-Frame-Options','DENY');self.end_headers()
+        if self.command!='HEAD':self.wfile.write(data)
+    def do_HEAD(self):
+        self.do_GET()
     def do_GET(self):
         if self.path in ('/demo','/demo/'):
             return self.send(200,(ROOT/'deploy/demo.html').read_bytes(),'text/html; charset=utf-8')

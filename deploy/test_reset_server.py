@@ -33,6 +33,11 @@ class ResetHTTPTests(unittest.TestCase):
         self.assertEqual(self.request('/demo/api/status')[0],200)
         self.assertFalse(self.calls)
         self.assertEqual(self.request('/demo/api/reset')[0],404)
+    def test_head_is_supported_without_reset(self):
+        response=urlopen(Request(self.url+'/demo',method='HEAD'),timeout=5)
+        self.assertEqual(response.status,200)
+        self.assertEqual(response.read(),b'')
+        self.assertFalse(self.calls)
     def test_cross_origin_and_missing_token_are_rejected(self):
         for h in ({},dict(self.headers(),Origin='https://evil.invalid')):
             self.assertEqual(self.request('/demo/api/reset',b'{"confirm":"RESET_DEMO"}',h)[0],403)

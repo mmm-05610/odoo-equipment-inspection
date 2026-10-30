@@ -1,7 +1,9 @@
 odoo.maomaokingdom.top {
     encode zstd gzip
-    @database_manager path /web/database /web/database/*
-    respond @database_manager "Not found" 404
+    @private_api path /web/database /web/database/* /xmlrpc /xmlrpc/* /jsonrpc /jsonrpc/*
+    handle @private_api {
+        respond "Not found" 404
+    }
     handle / {
         redir /demo 302
     }

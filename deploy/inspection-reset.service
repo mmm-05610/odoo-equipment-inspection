@@ -18,7 +18,7 @@ PrivateTmp=true
 ProtectHome=true
 ProtectSystem=strict
 ReadWritePaths=/var/lib/inspection-reset /opt/odoo-inspection/.runtime
-RestrictAddressFamilies=AF_UNIX AF_INET AF_INET6
+# Do not enable seccomp options that imply NoNewPrivileges: the fixed sudo command is required.
 
 [Install]
 WantedBy=multi-user.target
