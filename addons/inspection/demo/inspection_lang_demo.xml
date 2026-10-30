@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    演示环境使用简体中文界面：本文件必须在其他 demo 之前加载，因为演示账号的
+    lang=zh_CN 需要该语言先处于启用状态（Odoo 19 会拒绝为未启用语言写 lang）。
+    只在安装演示数据时生效，不改变普通安装的英文默认界面。
+-->
+<odoo noupdate="1">
+  <record id="base.lang_zh_CN" model="res.lang">
+    <field name="active" eval="True"/>
+  </record>
+</odoo>

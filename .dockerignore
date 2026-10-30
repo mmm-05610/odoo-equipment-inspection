@@ -1,0 +1,15 @@
+**
+!addons
+!addons/inspection
+!addons/inspection/**
+!vendor
+!vendor/quality_control_oca
+!vendor/quality_control_oca/**
+!scripts
+!scripts/load_factory_demo.py
+!deploy
+!deploy/Dockerfile
+!deploy/Postgres.Dockerfile
+!deploy/seed_public.py
+**/__pycache__
+**/*.pyc

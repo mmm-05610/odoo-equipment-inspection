@@ -1,0 +1,5 @@
+<odoo>
+  <record id="view_generate" model="ir.ui.view"><field name="name">批量生成设备检查</field><field name="model">inspection.generate</field><field name="arch" type="xml"><form><group><field name="mode"/><field name="inspection_date" invisible="mode == 'due'"/><field name="test_id" invisible="mode == 'due'"/><field name="equipment_ids" widget="many2many_tags"/></group><div class="text-muted">到期检查只生成已启用周期检查的设备；临时检查独立于周期，不改变下一次计划日期。</div><footer><button name="action_generate" type="object" string="生成检查" class="oe_highlight"/><button special="cancel" string="取消"/></footer></form></field></record>
+  <record id="action_generate" model="ir.actions.act_window"><field name="name">批量生成检查</field><field name="res_model">inspection.generate</field><field name="view_mode">form</field><field name="target">new</field></record>
+  <menuitem id="menu_generate" name="批量生成" parent="menu_inspection" action="action_generate" sequence="30" groups="group_manager"/>
+</odoo>

@@ -1,0 +1,14 @@
+<odoo noupdate="1">
+  <!-- 一个共享任务扫描所有到期设备；不按设备创建 cron。
+       默认关闭：学习环境是否启用由部署方决定，隔离验收环境会真实启用。 -->
+  <record id="cron_cycle" model="ir.cron">
+    <field name="name">设备检查：按周期生成</field>
+    <field name="model_id" ref="quality_control_oca.model_qc_inspection"/>
+    <field name="state">code</field>
+    <field name="code">model._cron_generate_cycle_inspections()</field>
+    <field name="interval_number">1</field>
+    <field name="interval_type">days</field>
+    <field name="user_id" ref="base.user_admin"/>
+    <field name="active" eval="False"/>
+  </record>
+</odoo>

@@ -1,0 +1,14 @@
+odoo.maomaokingdom.top {
+    encode zstd gzip
+    @database_manager path /web/database /web/database/*
+    respond @database_manager "Not found" 404
+    handle / {
+        redir /demo 302
+    }
+    handle /demo* {
+        reverse_proxy 172.17.0.1:8092
+    }
+    handle {
+        reverse_proxy 172.17.0.1:8076
+    }
+}

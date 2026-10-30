@@ -1,0 +1,115 @@
+<odoo>
+  <!-- Primary inherited view: reuse OCA scheme editor instead of a parallel model. -->
+  <record id="view_test_form" model="ir.ui.view">
+    <field name="name">设备检查方案</field><field name="model">qc.test</field>
+    <field name="inherit_id" ref="quality_control_oca.qc_test_form_view"/><field name="mode">primary</field>
+    <field name="arch" type="xml">
+      <field name="fill_correct_values" position="replace"><field name="inspection_equipment_use" invisible="1"/></field>
+      <field name="category" position="attributes"><attribute name="string">方案用途</attribute></field>
+      <field name="category" position="after">
+        <field name="equipment_category_ids" widget="many2many_tags" options="{'no_create': True}"/>
+        <field name="inspection_instructions" placeholder="何时使用、检查前提及演示标准说明…"/>
+      </field>
+      <field name="test_lines" position="attributes"><attribute name="string">检查项目</attribute></field>
+      <xpath expr="//field[@name='test_lines']/list/field[@name='type']" position="after"><field name="inspection_required" string="必须回答"/></xpath>
+      <xpath expr="//field[@name='test_lines']/list/field[@name='min_value']" position="attributes"><attribute name="invisible">type != 'quantitative'</attribute></xpath>
+      <xpath expr="//field[@name='test_lines']/list/field[@name='max_value']" position="attributes"><attribute name="invisible">type != 'quantitative'</attribute></xpath>
+      <xpath expr="//field[@name='test_lines']/list/field[@name='uom_id']" position="attributes"><attribute name="invisible">type != 'quantitative'</attribute></xpath>
+      <xpath expr="//field[@name='test_lines']/list/field[@name='ql_values']" position="attributes"><attribute name="invisible">type != 'qualitative'</attribute></xpath>
+    </field>
+  </record>
+
+  <!-- Reuse the OCA list and add the equipment-category column.  It is bound
+       explicitly in the action below (sequence 1) so the menu always opens the
+       list first; sequence 2 keeps the existing scheme form. -->
+  <record id="view_tests_list" model="ir.ui.view">
+    <field name="name">设备检查方案列表</field><field name="model">qc.test</field>
+    <field name="inherit_id" ref="quality_control_oca.qc_test_tree_view"/><field name="mode">primary</field>
+    <field name="arch" type="xml">
+      <field name="category" position="after">
+        <field name="equipment_category_ids" widget="many2many_tags" options="{'no_create': True}" optional="show"/>
+        <field name="inspection_equipment_use" invisible="1"/>
+      </field>
+    </field>
+  </record>
+
+  <record id="view_question_form" model="ir.ui.view"><field name="name">检查项目要求</field><field name="model">qc.test.question</field><field name="inherit_id" ref="quality_control_oca.qc_test_question_form_view"/><field name="arch" type="xml"><field name="type" position="after"><field name="inspection_required"/></field></field></record>
+
+  <record id="view_tests_search" model="ir.ui.view">
+    <field name="name">设备检查方案搜索</field><field name="model">qc.test</field><field name="arch" type="xml">
+      <search string="检查方案">
+        <field name="name" string="方案名称"/>
+        <field name="category" string="方案用途"/>
+        <field name="equipment_category_ids" string="适用设备类别"/>
+        <separator/>
+        <filter name="filter_equipment_use" string="仅设备检查方案" domain="[('inspection_equipment_use','=',True)]"/>
+        <group>
+          <filter name="group_by_category" string="方案用途" context="{'group_by': 'category'}"/>
+        </group>
+      </search>
+    </field>
+  </record>
+
+  <record id="action_tests" model="ir.actions.act_window"><field name="name">检查方案</field><field name="res_model">qc.test</field><field name="view_mode">list,form</field><field name="domain">[('inspection_equipment_use','=',True)]</field><field name="context">{'default_inspection_equipment_use': True}</field><field name="search_view_id" ref="view_tests_search"/></record>
+  <record id="action_tests_list" model="ir.actions.act_window.view"><field name="sequence">1</field><field name="view_mode">list</field><field name="view_id" ref="view_tests_list"/><field name="act_window_id" ref="action_tests"/></record>
+  <record id="action_tests_form" model="ir.actions.act_window.view"><field name="sequence">2</field><field name="view_mode">form</field><field name="view_id" ref="view_test_form"/><field name="act_window_id" ref="action_tests"/></record>
+
+  <record id="view_inspection_list" model="ir.ui.view"><field name="name">设备检查记录列表</field><field name="model">qc.inspection</field><field name="arch" type="xml"><list decoration-danger="state == 'failed'" decoration-warning="state == 'waiting'"><field name="name" string="检查编号"/><field name="equipment_id"/><field name="inspection_test_name"/><field name="inspection_date"/><field name="inspection_source"/><field name="inspection_cycle_date" optional="hide"/><field name="user" string="检查员"/><field name="state" string="状态" widget="badge"/><field name="inspection_conclusion"/><field name="maintenance_request_id" optional="show"/></list></field></record>
+  <record id="view_inspection_form" model="ir.ui.view">
+    <field name="name">设备检查记录</field><field name="model">qc.inspection</field><field name="arch" type="xml">
+      <form string="设备检查记录">
+        <header>
+          <button name="action_todo" type="object" string="开始检查" class="oe_highlight" invisible="state != 'draft'"/>
+          <button name="action_confirm" type="object" string="提交检查" class="oe_highlight" invisible="state != 'ready'"/>
+          <button name="action_approve" type="object" string="确认异常" class="oe_highlight" invisible="state != 'waiting'" groups="inspection.group_manager"/>
+          <button name="action_create_repair" type="object" string="转维修／打开维修" invisible="state != 'failed'" groups="inspection.group_manager"/>
+          <button name="action_rebuild_cycle_inspection" type="object" string="补建本期检查" class="btn-secondary" invisible="state != 'canceled' or not inspection_cycle_date" groups="inspection.group_manager"/>
+          <button name="action_cancel" type="object" string="取消" invisible="state not in ['draft','ready','waiting']"/>
+          <field name="state" widget="statusbar" statusbar_visible="draft,ready,waiting,success,failed"/>
+        </header>
+        <sheet><h1><field name="name" readonly="1"/></h1>
+          <group><group>
+            <field name="equipment_id" required="1" readonly="id"/>
+            <field name="test" string="检查方案" required="1" readonly="id" domain="[('inspection_equipment_use','=',True), ('equipment_category_ids','in',[equipment_category_id])]"/>
+            <field name="equipment_category_id" invisible="1"/>
+            <field name="inspection_test_name" invisible="not id"/>
+            <field name="inspection_supervisor_id" string="当次检查主管" readonly="1" invisible="not inspection_supervisor_id"/>
+            <field name="user" string="检查员" readonly="state not in ['draft','ready']"/>
+          </group><group>
+            <field name="inspection_date" readonly="id"/><field name="inspection_source" readonly="1"/>
+            <field name="inspection_cycle_date" readonly="1" invisible="not inspection_cycle_date"/>
+            <field name="inspection_conclusion"/><field name="maintenance_request_id" readonly="1"/>
+            <field name="company_id" groups="base.group_multi_company" readonly="id"/>
+          </group></group>
+          <notebook><page string="检查结果">
+            <div class="alert alert-info" role="status" invisible="state != 'ready'">数值为 0 时请勾选“已测量”；现场情况请填入“检查备注”。异常提交后由主管确认。</div>
+            <div class="alert alert-info" role="status" invisible="not inspection_cycle_date or state != 'canceled'">这是一期已取消的周期检查：后台不会自动补建，也不会回退下一次计划日期。如仍需要这次检查，可由检查主管点击“补建本期检查”。</div>
+            <field name="inspection_lines" readonly="state not in ['draft','ready']">
+              <list editable="bottom" create="false" delete="false">
+                <field name="name" string="项目" readonly="1"/><field name="question_type" string="类型" readonly="1"/>
+                <field name="inspection_required" readonly="1" optional="hide"/>
+                <field name="possible_ql_values" column_invisible="1"/>
+                <field name="qualitative_value" string="选择答案" invisible="question_type != 'qualitative' or parent.state in ['success','failed']" options="{'no_create': True, 'no_open': True}"/>
+                <field name="inspection_answer_label" invisible="question_type != 'qualitative' or parent.state not in ['success','failed']"/>
+                <field name="quantitative_value" string="实测数值" invisible="question_type != 'quantitative'"/>
+                <field name="inspection_numeric_answered" invisible="question_type != 'quantitative'"/>
+                <field name="uom_id" string="实测单位" invisible="question_type != 'quantitative'" options="{'no_create': True}"/>
+                <field name="test_uom_category" column_invisible="1"/>
+                <field name="inspection_unit_name" optional="hide"/>
+                <field name="min_value" string="下限" readonly="1" invisible="question_type != 'quantitative'"/>
+                <field name="max_value" string="上限" readonly="1" invisible="question_type != 'quantitative'"/>
+                <field name="inspection_result" optional="show"/><field name="success" string="合格" readonly="1" optional="hide"/>
+              </list>
+            </field>
+          </page><page string="检查备注"><field name="internal_notes" placeholder="记录现场观察、异常描述及需要补充的说明…" readonly="state in ['success','failed','canceled']"/></page></notebook>
+        </sheet><chatter/>
+      </form>
+    </field>
+  </record>
+  <record id="action_inspections" model="ir.actions.act_window"><field name="name">检查记录</field><field name="res_model">qc.inspection</field><field name="view_mode">list,form</field><field name="domain">[('equipment_id','!=',False)]</field></record>
+  <record id="action_inspections_list" model="ir.actions.act_window.view"><field name="sequence">1</field><field name="view_mode">list</field><field name="view_id" ref="view_inspection_list"/><field name="act_window_id" ref="action_inspections"/></record>
+  <record id="action_inspections_form" model="ir.actions.act_window.view"><field name="sequence">2</field><field name="view_mode">form</field><field name="view_id" ref="view_inspection_form"/><field name="act_window_id" ref="action_inspections"/></record>
+  <menuitem id="menu_inspection" name="检查" parent="maintenance.menu_maintenance_title" sequence="25" groups="group_user"/>
+  <menuitem id="menu_records" name="检查记录" parent="menu_inspection" action="action_inspections" sequence="10"/>
+  <menuitem id="menu_tests" name="检查方案" parent="menu_inspection" action="action_tests" sequence="20" groups="group_manager"/>
+</odoo>

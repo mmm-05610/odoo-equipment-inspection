@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+  <data noupdate="1">
+    <!-- 设备检查待办：挂在 maintenance.equipment 上的原生活动类型。
+         xmlid 固定，随模块安装/升级复现；不新增任何提醒模型。 -->
+    <record id="mail_act_equipment_inspection" model="mail.activity.type">
+      <field name="name">设备检查</field>
+      <field name="summary">设备检查待办</field>
+      <field name="icon">fa-clipboard</field>
+      <field name="sequence">40</field>
+      <field name="res_model">maintenance.equipment</field>
+    </record>
+
+    <!-- 异常检查提交后转成“待确认”提醒：复用同一活动记录，只切换类型/负责人。 -->
+    <record id="mail_act_equipment_inspection_waiting" model="mail.activity.type">
+      <field name="name">异常检查待确认</field>
+      <field name="summary">待确认异常检查</field>
+      <field name="icon">fa-exclamation-triangle</field>
+      <field name="decoration_type">warning</field>
+      <field name="sequence">41</field>
+      <field name="res_model">maintenance.equipment</field>
+    </record>
+  </data>
+</odoo>

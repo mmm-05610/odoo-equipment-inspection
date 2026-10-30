@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <!-- “未来检查计划”只读详情：不是检查单，不提供生成入口。 -->
+    <t t-name="inspection.InspectionCalendarPlanDialog">
+        <Dialog title="'未来检查计划'" size="'md'">
+            <div class="alert alert-info mb-3" role="status">
+                本行是设备的周期计划，<strong>尚未生成检查单</strong>，不参与检查次数和异常统计。
+                计划不会创建检查记录；如需现在检查，请到设备页点击“立即生成到期检查”，
+                或等待计划任务生成真实检查。
+            </div>
+            <div class="o_inspection_calendar_plan_details">
+                <div class="row py-1 border-bottom">
+                    <div class="col-4 text-muted">设备</div>
+                    <div class="col-8 fw-bold"><t t-esc="equipmentName"/></div>
+                </div>
+                <div class="row py-1 border-bottom">
+                    <div class="col-4 text-muted">检查方案</div>
+                    <div class="col-8"><t t-esc="testName"/></div>
+                </div>
+                <div class="row py-1 border-bottom">
+                    <div class="col-4 text-muted">计划日期</div>
+                    <div class="col-8"><t t-esc="planDate"/></div>
+                </div>
+                <div class="row py-1 border-bottom">
+                    <div class="col-4 text-muted">周期来源</div>
+                    <div class="col-8"><t t-esc="cycleLabel"/></div>
+                </div>
+                <div class="row py-1">
+                    <div class="col-4 text-muted">检查员</div>
+                    <div class="col-8"><t t-esc="inspectorName"/></div>
+                </div>
+            </div>
+            <t t-set-slot="footer">
+                <button type="button" class="btn btn-primary" t-on-click="props.close">关闭</button>
+            </t>
+        </Dialog>
+    </t>
+
+</templates>

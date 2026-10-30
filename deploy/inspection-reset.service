@@ -1,0 +1,24 @@
+[Unit]
+Description=Equipment inspection public demo and reset portal
+After=network-online.target docker.service
+Requires=docker.service
+
+[Service]
+Type=simple
+User=inspection-reset
+Group=inspection-reset
+WorkingDirectory=/opt/odoo-inspection
+Environment=DEMO_ORIGIN=https://odoo.maomaokingdom.top
+Environment=RESET_BIND_IP=172.17.0.1
+Environment=RESET_STATE_DIR=/var/lib/inspection-reset
+ExecStart=/usr/bin/python3 /opt/odoo-inspection/deploy/reset_server.py
+Restart=on-failure
+UMask=0077
+PrivateTmp=true
+ProtectHome=true
+ProtectSystem=strict
+ReadWritePaths=/var/lib/inspection-reset /opt/odoo-inspection/.runtime
+RestrictAddressFamilies=AF_UNIX AF_INET AF_INET6
+
+[Install]
+WantedBy=multi-user.target

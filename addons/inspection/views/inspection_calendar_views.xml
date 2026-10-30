@@ -1,0 +1,83 @@
+<odoo>
+  <!--
+    检查日历（§5）：建在 qc.inspection 上，复用 OCA 检查单。
+    - 真实检查就是检查单本身，点击走原生表单；
+    - 未来计划不落库：由自定义 Model 在每次加载可见日期范围时调用
+      qc.inspection.get_cycle_plan_preview() 现算，负数 id 合并渲染；
+    - 日历只读：create/edit/delete/quick_create 全关，不提供任何生成入口。
+  -->
+  <record id="view_inspection_calendar" model="ir.ui.view">
+    <field name="name">检查日历</field>
+    <field name="model">qc.inspection</field>
+    <field name="arch" type="xml">
+      <calendar string="检查日历" js_class="inspection_calendar"
+                date_start="inspection_date" create_name_field="inspection_calendar_title"
+                color="inspection_calendar_color" mode="month" hide_time="true"
+                create="0" edit="0" delete="0" quick_create="0" event_open_popup="1"
+                event_limit="8">
+        <field name="inspection_calendar_title" invisible="1"/>
+        <field name="inspection_calendar_state_label" string="状态"/>
+        <field name="equipment_id" string="设备"/>
+        <field name="test" string="检查方案"/>
+        <field name="user" string="检查员"/>
+        <field name="inspection_calendar_cycle_label" string="周期来源"
+               invisible="not inspection_calendar_cycle_label"/>
+      </calendar>
+    </field>
+  </record>
+
+  <record id="view_inspection_calendar_search" model="ir.ui.view">
+    <field name="name">检查日历搜索</field>
+    <field name="model">qc.inspection</field>
+    <field name="arch" type="xml">
+      <search string="检查日历">
+        <field name="equipment_id" string="设备"/>
+        <field name="test" string="检查方案"/>
+        <field name="user" string="检查员"/>
+        <field name="name" string="检查编号"/>
+        <separator/>
+        <filter name="filter_my" string="我的任务" domain="[('user', '=', uid)]"/>
+        <filter name="filter_open" string="未完成任务"
+                domain="[('state', 'in', ['draft', 'ready', 'waiting'])]"/>
+        <filter name="filter_success" string="合格" domain="[('state', '=', 'success')]"/>
+        <filter name="filter_failed" string="异常" domain="[('state', '=', 'failed')]"/>
+        <filter name="filter_canceled" string="已取消" domain="[('state', '=', 'canceled')]"/>
+        <separator/>
+        <filter name="filter_inspection_date" string="业务日期" date="inspection_date"/>
+        <group>
+          <filter name="group_by_equipment" string="设备" context="{'group_by': 'equipment_id'}"/>
+          <filter name="group_by_test" string="检查方案" context="{'group_by': 'test'}"/>
+          <filter name="group_by_user" string="检查员" context="{'group_by': 'user'}"/>
+        </group>
+      </search>
+    </field>
+  </record>
+
+  <record id="action_inspection_calendar" model="ir.actions.act_window">
+    <field name="name">检查日历</field>
+    <field name="res_model">qc.inspection</field>
+    <field name="view_mode">calendar,form</field>
+    <field name="search_view_id" ref="view_inspection_calendar_search"/>
+    <field name="domain">[('equipment_id', '!=', False)]</field>
+    <field name="help" type="html">
+      <p class="o_view_nocontent_smiling_face">检查日历还没有内容</p>
+      <p>启用设备周期检查或创建检查记录后，这里会显示真实检查与未来周期计划（计划不落库）。</p>
+    </field>
+  </record>
+  <record id="action_inspection_calendar_calendar" model="ir.actions.act_window.view">
+    <field name="sequence">1</field>
+    <field name="view_mode">calendar</field>
+    <field name="view_id" ref="view_inspection_calendar"/>
+    <field name="act_window_id" ref="action_inspection_calendar"/>
+  </record>
+  <record id="action_inspection_calendar_form" model="ir.actions.act_window.view">
+    <field name="sequence">2</field>
+    <field name="view_mode">form</field>
+    <field name="view_id" ref="inspection.view_inspection_form"/>
+    <field name="act_window_id" ref="action_inspection_calendar"/>
+  </record>
+
+  <menuitem id="menu_inspection_calendar" name="检查日历"
+            parent="inspection.menu_inspection" action="action_inspection_calendar"
+            sequence="15" groups="inspection.group_user"/>
+</odoo>

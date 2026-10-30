@@ -1,0 +1,767 @@
+<?xml version='1.0' encoding='utf-8'?>
+<odoo noupdate="1">
+  <record id="factory_user_manager" model="res.users">
+    <field name="name">王敏</field>
+    <field name="login">inspection.manager</field>
+    <field name="password">InspectionDemo2026!</field>
+    <field name="function">检查主管</field>
+    <field name="lang">zh_CN</field>
+    <field name="tz">Asia/Shanghai</field>
+    <field name="notification_type">inbox</field>
+    <field name="company_id" ref="base.main_company" />
+    <field name="company_ids" eval="[(6, 0, [ref('base.main_company')])]" />
+    <field name="group_ids" eval="[(6, 0, [ref('base.group_user'), ref('group_manager')])]" />
+  </record>
+  <record id="factory_user_inspector" model="res.users">
+    <field name="name">李伟</field>
+    <field name="login">inspection.inspector</field>
+    <field name="password">InspectionDemo2026!</field>
+    <field name="function">机械检查员</field>
+    <field name="lang">zh_CN</field>
+    <field name="tz">Asia/Shanghai</field>
+    <field name="notification_type">inbox</field>
+    <field name="company_id" ref="base.main_company" />
+    <field name="company_ids" eval="[(6, 0, [ref('base.main_company')])]" />
+    <field name="group_ids" eval="[(6, 0, [ref('base.group_user'), ref('group_user')])]" />
+  </record>
+  <record id="factory_user_mechanic" model="res.users">
+    <field name="name">张建国</field>
+    <field name="login">maintenance.zhang</field>
+    <field name="password">InspectionDemo2026!</field>
+    <field name="function">机械维修技术员</field>
+    <field name="lang">zh_CN</field>
+    <field name="tz">Asia/Shanghai</field>
+    <field name="notification_type">inbox</field>
+    <field name="company_id" ref="base.main_company" />
+    <field name="company_ids" eval="[(6, 0, [ref('base.main_company')])]" />
+    <field name="group_ids" eval="[(6, 0, [ref('base.group_user'), ref('group_user')])]" />
+  </record>
+  <record id="factory_user_electrician" model="res.users">
+    <field name="name">陈浩</field>
+    <field name="login">maintenance.chen</field>
+    <field name="password">InspectionDemo2026!</field>
+    <field name="function">电气技术员</field>
+    <field name="lang">zh_CN</field>
+    <field name="tz">Asia/Shanghai</field>
+    <field name="notification_type">inbox</field>
+    <field name="company_id" ref="base.main_company" />
+    <field name="company_ids" eval="[(6, 0, [ref('base.main_company')])]" />
+    <field name="group_ids" eval="[(6, 0, [ref('base.group_user'), ref('group_user')])]" />
+  </record>
+  <record id="factory_user_electrician_2" model="res.users">
+    <field name="name">赵宁</field>
+    <field name="login">maintenance.zhao</field>
+    <field name="password">InspectionDemo2026!</field>
+    <field name="function">电气技术员</field>
+    <field name="lang">zh_CN</field>
+    <field name="tz">Asia/Shanghai</field>
+    <field name="notification_type">inbox</field>
+    <field name="company_id" ref="base.main_company" />
+    <field name="company_ids" eval="[(6, 0, [ref('base.main_company')])]" />
+    <field name="group_ids" eval="[(6, 0, [ref('base.group_user'), ref('group_user')])]" />
+  </record>
+  <record id="factory_user_instrument" model="res.users">
+    <field name="name">周敏</field>
+    <field name="login">maintenance.zhou</field>
+    <field name="password">InspectionDemo2026!</field>
+    <field name="function">仪表技术员</field>
+    <field name="lang">zh_CN</field>
+    <field name="tz">Asia/Shanghai</field>
+    <field name="notification_type">inbox</field>
+    <field name="company_id" ref="base.main_company" />
+    <field name="company_ids" eval="[(6, 0, [ref('base.main_company')])]" />
+    <field name="group_ids" eval="[(6, 0, [ref('base.group_user'), ref('group_user')])]" />
+  </record>
+  <record id="factory_user_instrument_2" model="res.users">
+    <field name="name">吴涛</field>
+    <field name="login">maintenance.wu</field>
+    <field name="password">InspectionDemo2026!</field>
+    <field name="function">仪表技术员</field>
+    <field name="lang">zh_CN</field>
+    <field name="tz">Asia/Shanghai</field>
+    <field name="notification_type">inbox</field>
+    <field name="company_id" ref="base.main_company" />
+    <field name="company_ids" eval="[(6, 0, [ref('base.main_company')])]" />
+    <field name="group_ids" eval="[(6, 0, [ref('base.group_user'), ref('group_user')])]" />
+  </record>
+  <record id="factory_team_mechanical" model="maintenance.team">
+    <field name="name">机械维修组</field>
+    <field name="company_id" ref="base.main_company" />
+    <field name="member_ids" eval="[(6, 0, [ref('factory_user_inspector'), ref('factory_user_mechanic')])]" />
+  </record>
+  <record id="factory_team_electrical" model="maintenance.team">
+    <field name="name">电气维护组</field>
+    <field name="company_id" ref="base.main_company" />
+    <field name="member_ids" eval="[(6, 0, [ref('factory_user_electrician'), ref('factory_user_electrician_2')])]" />
+  </record>
+  <record id="factory_team_instrument" model="maintenance.team">
+    <field name="name">仪表维护组</field>
+    <field name="company_id" ref="base.main_company" />
+    <field name="member_ids" eval="[(6, 0, [ref('factory_user_instrument'), ref('factory_user_instrument_2')])]" />
+  </record>
+  <record id="factory_category_pump" model="maintenance.equipment.category">
+    <field name="name">水泵</field>
+    <field name="company_id" ref="base.main_company" />
+    <field name="technician_user_id" ref="factory_user_manager" />
+  </record>
+  <record id="factory_category_fan" model="maintenance.equipment.category">
+    <field name="name">风机</field>
+    <field name="company_id" ref="base.main_company" />
+    <field name="technician_user_id" ref="factory_user_manager" />
+  </record>
+  <record id="factory_category_motor" model="maintenance.equipment.category">
+    <field name="name">电机</field>
+    <field name="company_id" ref="base.main_company" />
+    <field name="technician_user_id" ref="factory_user_manager" />
+  </record>
+  <record id="factory_category_instrument" model="maintenance.equipment.category">
+    <field name="name">仪表</field>
+    <field name="company_id" ref="base.main_company" />
+    <field name="technician_user_id" ref="factory_user_manager" />
+  </record>
+  <record id="factory_purpose_daily" model="qc.test.category">
+    <field name="name">日常巡检</field>
+  </record>
+  <record id="factory_purpose_acceptance" model="qc.test.category">
+    <field name="name">检修后验收</field>
+  </record>
+  <record id="factory_purpose_diagnostic" model="qc.test.category">
+    <field name="name">异常专项排查</field>
+  </record>
+  <record id="factory_purpose_safety" model="qc.test.category">
+    <field name="name">现场安全</field>
+  </record>
+  <record id="factory_uom_bar" model="uom.uom">
+    <field name="name">bar</field>
+  </record>
+  <record id="factory_uom_vibration" model="uom.uom">
+    <field name="name">mm/s</field>
+  </record>
+  <record id="factory_uom_temperature" model="uom.uom">
+    <field name="name">°C</field>
+  </record>
+  <record id="factory_uom_kpa" model="uom.uom">
+    <field name="name">kPa</field>
+    <field name="relative_uom_id" ref="factory_uom_bar" />
+    <field name="relative_factor" eval="0.01" />
+  </record>
+  <record id="factory_test_pump_daily" model="qc.test">
+    <field name="name">水泵｜日常巡检</field>
+    <field name="inspection_equipment_use" eval="True" />
+    <field name="company_id" ref="base.main_company" />
+    <field name="category" ref="factory_purpose_daily" />
+    <field name="equipment_category_ids" eval="[(6, 0, [ref('factory_category_pump')])]" />
+    <field name="inspection_instructions">运行中的例行巡视，检查密封、压力和声音。 所有数值阈值仅供演示，不作为实际设备维护标准。</field>
+  </record>
+  <record id="factory_question_pump_daily_seal" model="qc.test.question">
+    <field name="name">密封处是否渗漏</field>
+    <field name="test" ref="factory_test_pump_daily" />
+    <field name="type">qualitative</field>
+    <field name="sequence" eval="10" />
+    <field name="inspection_required" eval="True" />
+  </record>
+  <record id="factory_question_pump_daily_seal_ok" model="qc.test.question.value">
+    <field name="name">无渗漏</field>
+    <field name="test_line" ref="factory_question_pump_daily_seal" />
+    <field name="ok" eval="True" />
+  </record>
+  <record id="factory_question_pump_daily_seal_bad" model="qc.test.question.value">
+    <field name="name">有渗漏</field>
+    <field name="test_line" ref="factory_question_pump_daily_seal" />
+    <field name="ok" eval="False" />
+  </record>
+  <record id="factory_question_pump_daily_pressure" model="qc.test.question">
+    <field name="name">出口压力</field>
+    <field name="test" ref="factory_test_pump_daily" />
+    <field name="type">quantitative</field>
+    <field name="sequence" eval="20" />
+    <field name="inspection_required" eval="True" />
+    <field name="min_value" eval="5" />
+    <field name="max_value" eval="8" />
+    <field name="uom_id" ref="factory_uom_bar" />
+  </record>
+  <record id="factory_question_pump_daily_sound" model="qc.test.question">
+    <field name="name">运行声音</field>
+    <field name="test" ref="factory_test_pump_daily" />
+    <field name="type">qualitative</field>
+    <field name="sequence" eval="30" />
+    <field name="inspection_required" eval="True" />
+  </record>
+  <record id="factory_question_pump_daily_sound_ok" model="qc.test.question.value">
+    <field name="name">无异响</field>
+    <field name="test_line" ref="factory_question_pump_daily_sound" />
+    <field name="ok" eval="True" />
+  </record>
+  <record id="factory_question_pump_daily_sound_bad" model="qc.test.question.value">
+    <field name="name">有异响</field>
+    <field name="test_line" ref="factory_question_pump_daily_sound" />
+    <field name="ok" eval="False" />
+  </record>
+  <record id="factory_test_pump_acceptance" model="qc.test">
+    <field name="name">水泵｜检修后验收</field>
+    <field name="inspection_equipment_use" eval="True" />
+    <field name="company_id" ref="base.main_company" />
+    <field name="category" ref="factory_purpose_acceptance" />
+    <field name="equipment_category_ids" eval="[(6, 0, [ref('factory_category_pump')])]" />
+    <field name="inspection_instructions">维修完成后，由检查人员核对复装与试运行情况。 所有数值阈值仅供演示，不作为实际设备维护标准。</field>
+  </record>
+  <record id="factory_question_pump_acceptance_guard" model="qc.test.question">
+    <field name="name">防护恢复</field>
+    <field name="test" ref="factory_test_pump_acceptance" />
+    <field name="type">qualitative</field>
+    <field name="sequence" eval="10" />
+    <field name="inspection_required" eval="True" />
+  </record>
+  <record id="factory_question_pump_acceptance_guard_ok" model="qc.test.question.value">
+    <field name="name">已恢复</field>
+    <field name="test_line" ref="factory_question_pump_acceptance_guard" />
+    <field name="ok" eval="True" />
+  </record>
+  <record id="factory_question_pump_acceptance_guard_bad" model="qc.test.question.value">
+    <field name="name">未恢复</field>
+    <field name="test_line" ref="factory_question_pump_acceptance_guard" />
+    <field name="ok" eval="False" />
+  </record>
+  <record id="factory_question_pump_acceptance_connection" model="qc.test.question">
+    <field name="name">连接部位</field>
+    <field name="test" ref="factory_test_pump_acceptance" />
+    <field name="type">qualitative</field>
+    <field name="sequence" eval="20" />
+    <field name="inspection_required" eval="True" />
+  </record>
+  <record id="factory_question_pump_acceptance_connection_ok" model="qc.test.question.value">
+    <field name="name">无松动</field>
+    <field name="test_line" ref="factory_question_pump_acceptance_connection" />
+    <field name="ok" eval="True" />
+  </record>
+  <record id="factory_question_pump_acceptance_connection_bad" model="qc.test.question.value">
+    <field name="name">有松动</field>
+    <field name="test_line" ref="factory_question_pump_acceptance_connection" />
+    <field name="ok" eval="False" />
+  </record>
+  <record id="factory_question_pump_acceptance_pressure" model="qc.test.question">
+    <field name="name">试运行出口压力</field>
+    <field name="test" ref="factory_test_pump_acceptance" />
+    <field name="type">quantitative</field>
+    <field name="sequence" eval="30" />
+    <field name="inspection_required" eval="True" />
+    <field name="min_value" eval="5" />
+    <field name="max_value" eval="8" />
+    <field name="uom_id" ref="factory_uom_bar" />
+  </record>
+  <record id="factory_test_pump_diagnostic" model="qc.test">
+    <field name="name">水泵｜压力异常排查</field>
+    <field name="inspection_equipment_use" eval="True" />
+    <field name="company_id" ref="base.main_company" />
+    <field name="category" ref="factory_purpose_diagnostic" />
+    <field name="equipment_category_ids" eval="[(6, 0, [ref('factory_category_pump')])]" />
+    <field name="inspection_instructions">发现压力偏差后，记录读数与现场状态，供维修人员判断。 所有数值阈值仅供演示，不作为实际设备维护标准。</field>
+  </record>
+  <record id="factory_question_pump_diagnostic_pressure" model="qc.test.question">
+    <field name="name">出口压力</field>
+    <field name="test" ref="factory_test_pump_diagnostic" />
+    <field name="type">quantitative</field>
+    <field name="sequence" eval="10" />
+    <field name="inspection_required" eval="True" />
+    <field name="min_value" eval="5" />
+    <field name="max_value" eval="8" />
+    <field name="uom_id" ref="factory_uom_bar" />
+  </record>
+  <record id="factory_question_pump_diagnostic_valve" model="qc.test.question">
+    <field name="name">阀门状态</field>
+    <field name="test" ref="factory_test_pump_diagnostic" />
+    <field name="type">qualitative</field>
+    <field name="sequence" eval="20" />
+    <field name="inspection_required" eval="True" />
+  </record>
+  <record id="factory_question_pump_diagnostic_valve_ok" model="qc.test.question.value">
+    <field name="name">符合运行要求</field>
+    <field name="test_line" ref="factory_question_pump_diagnostic_valve" />
+    <field name="ok" eval="True" />
+  </record>
+  <record id="factory_question_pump_diagnostic_valve_bad" model="qc.test.question.value">
+    <field name="name">状态异常</field>
+    <field name="test_line" ref="factory_question_pump_diagnostic_valve" />
+    <field name="ok" eval="False" />
+  </record>
+  <record id="factory_question_pump_diagnostic_display" model="qc.test.question">
+    <field name="name">仪表示值</field>
+    <field name="test" ref="factory_test_pump_diagnostic" />
+    <field name="type">qualitative</field>
+    <field name="sequence" eval="30" />
+    <field name="inspection_required" eval="True" />
+  </record>
+  <record id="factory_question_pump_diagnostic_display_ok" model="qc.test.question.value">
+    <field name="name">稳定</field>
+    <field name="test_line" ref="factory_question_pump_diagnostic_display" />
+    <field name="ok" eval="True" />
+  </record>
+  <record id="factory_question_pump_diagnostic_display_bad" model="qc.test.question.value">
+    <field name="name">波动异常</field>
+    <field name="test_line" ref="factory_question_pump_diagnostic_display" />
+    <field name="ok" eval="False" />
+  </record>
+  <record id="factory_test_fan_daily" model="qc.test">
+    <field name="name">风机｜日常巡检</field>
+    <field name="inspection_equipment_use" eval="True" />
+    <field name="company_id" ref="base.main_company" />
+    <field name="category" ref="factory_purpose_daily" />
+    <field name="equipment_category_ids" eval="[(6, 0, [ref('factory_category_fan')])]" />
+    <field name="inspection_instructions">记录风机运行状态、保护情况和振动读数。 所有数值阈值仅供演示，不作为实际设备维护标准。</field>
+  </record>
+  <record id="factory_question_fan_daily_sound" model="qc.test.question">
+    <field name="name">运行声音</field>
+    <field name="test" ref="factory_test_fan_daily" />
+    <field name="type">qualitative</field>
+    <field name="sequence" eval="10" />
+    <field name="inspection_required" eval="True" />
+  </record>
+  <record id="factory_question_fan_daily_sound_ok" model="qc.test.question.value">
+    <field name="name">无异响</field>
+    <field name="test_line" ref="factory_question_fan_daily_sound" />
+    <field name="ok" eval="True" />
+  </record>
+  <record id="factory_question_fan_daily_sound_bad" model="qc.test.question.value">
+    <field name="name">有异响</field>
+    <field name="test_line" ref="factory_question_fan_daily_sound" />
+    <field name="ok" eval="False" />
+  </record>
+  <record id="factory_question_fan_daily_guard" model="qc.test.question">
+    <field name="name">防护罩</field>
+    <field name="test" ref="factory_test_fan_daily" />
+    <field name="type">qualitative</field>
+    <field name="sequence" eval="20" />
+    <field name="inspection_required" eval="True" />
+  </record>
+  <record id="factory_question_fan_daily_guard_ok" model="qc.test.question.value">
+    <field name="name">完好</field>
+    <field name="test_line" ref="factory_question_fan_daily_guard" />
+    <field name="ok" eval="True" />
+  </record>
+  <record id="factory_question_fan_daily_guard_bad" model="qc.test.question.value">
+    <field name="name">松动或破损</field>
+    <field name="test_line" ref="factory_question_fan_daily_guard" />
+    <field name="ok" eval="False" />
+  </record>
+  <record id="factory_question_fan_daily_vibration" model="qc.test.question">
+    <field name="name">振动读数</field>
+    <field name="test" ref="factory_test_fan_daily" />
+    <field name="type">quantitative</field>
+    <field name="sequence" eval="30" />
+    <field name="inspection_required" eval="True" />
+    <field name="min_value" eval="0" />
+    <field name="max_value" eval="4.5" />
+    <field name="uom_id" ref="factory_uom_vibration" />
+  </record>
+  <record id="factory_test_fan_acceptance" model="qc.test">
+    <field name="name">风机｜检修后验收</field>
+    <field name="inspection_equipment_use" eval="True" />
+    <field name="company_id" ref="base.main_company" />
+    <field name="category" ref="factory_purpose_acceptance" />
+    <field name="equipment_category_ids" eval="[(6, 0, [ref('factory_category_fan')])]" />
+    <field name="inspection_instructions">检修复装后确认紧固、防护和试运行。 所有数值阈值仅供演示，不作为实际设备维护标准。</field>
+  </record>
+  <record id="factory_question_fan_acceptance_fastener" model="qc.test.question">
+    <field name="name">紧固状态</field>
+    <field name="test" ref="factory_test_fan_acceptance" />
+    <field name="type">qualitative</field>
+    <field name="sequence" eval="10" />
+    <field name="inspection_required" eval="True" />
+  </record>
+  <record id="factory_question_fan_acceptance_fastener_ok" model="qc.test.question.value">
+    <field name="name">已紧固</field>
+    <field name="test_line" ref="factory_question_fan_acceptance_fastener" />
+    <field name="ok" eval="True" />
+  </record>
+  <record id="factory_question_fan_acceptance_fastener_bad" model="qc.test.question.value">
+    <field name="name">有松动</field>
+    <field name="test_line" ref="factory_question_fan_acceptance_fastener" />
+    <field name="ok" eval="False" />
+  </record>
+  <record id="factory_question_fan_acceptance_guard" model="qc.test.question">
+    <field name="name">防护恢复</field>
+    <field name="test" ref="factory_test_fan_acceptance" />
+    <field name="type">qualitative</field>
+    <field name="sequence" eval="20" />
+    <field name="inspection_required" eval="True" />
+  </record>
+  <record id="factory_question_fan_acceptance_guard_ok" model="qc.test.question.value">
+    <field name="name">已恢复</field>
+    <field name="test_line" ref="factory_question_fan_acceptance_guard" />
+    <field name="ok" eval="True" />
+  </record>
+  <record id="factory_question_fan_acceptance_guard_bad" model="qc.test.question.value">
+    <field name="name">未恢复</field>
+    <field name="test_line" ref="factory_question_fan_acceptance_guard" />
+    <field name="ok" eval="False" />
+  </record>
+  <record id="factory_question_fan_acceptance_vibration" model="qc.test.question">
+    <field name="name">试运行振动</field>
+    <field name="test" ref="factory_test_fan_acceptance" />
+    <field name="type">quantitative</field>
+    <field name="sequence" eval="30" />
+    <field name="inspection_required" eval="True" />
+    <field name="min_value" eval="0" />
+    <field name="max_value" eval="4.5" />
+    <field name="uom_id" ref="factory_uom_vibration" />
+  </record>
+  <record id="factory_test_motor_daily" model="qc.test">
+    <field name="name">电机｜日常检查</field>
+    <field name="inspection_equipment_use" eval="True" />
+    <field name="company_id" ref="base.main_company" />
+    <field name="category" ref="factory_purpose_daily" />
+    <field name="equipment_category_ids" eval="[(6, 0, [ref('factory_category_motor')])]" />
+    <field name="inspection_instructions">巡视外观、声音和表面温度，记录可见异常。 所有数值阈值仅供演示，不作为实际设备维护标准。</field>
+  </record>
+  <record id="factory_question_motor_daily_appearance" model="qc.test.question">
+    <field name="name">外观状态</field>
+    <field name="test" ref="factory_test_motor_daily" />
+    <field name="type">qualitative</field>
+    <field name="sequence" eval="10" />
+    <field name="inspection_required" eval="True" />
+  </record>
+  <record id="factory_question_motor_daily_appearance_ok" model="qc.test.question.value">
+    <field name="name">完好</field>
+    <field name="test_line" ref="factory_question_motor_daily_appearance" />
+    <field name="ok" eval="True" />
+  </record>
+  <record id="factory_question_motor_daily_appearance_bad" model="qc.test.question.value">
+    <field name="name">异常</field>
+    <field name="test_line" ref="factory_question_motor_daily_appearance" />
+    <field name="ok" eval="False" />
+  </record>
+  <record id="factory_question_motor_daily_sound" model="qc.test.question">
+    <field name="name">运行声音</field>
+    <field name="test" ref="factory_test_motor_daily" />
+    <field name="type">qualitative</field>
+    <field name="sequence" eval="20" />
+    <field name="inspection_required" eval="True" />
+  </record>
+  <record id="factory_question_motor_daily_sound_ok" model="qc.test.question.value">
+    <field name="name">无异响</field>
+    <field name="test_line" ref="factory_question_motor_daily_sound" />
+    <field name="ok" eval="True" />
+  </record>
+  <record id="factory_question_motor_daily_sound_bad" model="qc.test.question.value">
+    <field name="name">有异响</field>
+    <field name="test_line" ref="factory_question_motor_daily_sound" />
+    <field name="ok" eval="False" />
+  </record>
+  <record id="factory_question_motor_daily_temperature" model="qc.test.question">
+    <field name="name">表面温度</field>
+    <field name="test" ref="factory_test_motor_daily" />
+    <field name="type">quantitative</field>
+    <field name="sequence" eval="30" />
+    <field name="inspection_required" eval="True" />
+    <field name="min_value" eval="10" />
+    <field name="max_value" eval="65" />
+    <field name="uom_id" ref="factory_uom_temperature" />
+  </record>
+  <record id="factory_test_motor_acceptance" model="qc.test">
+    <field name="name">电机｜检修后验收</field>
+    <field name="inspection_equipment_use" eval="True" />
+    <field name="company_id" ref="base.main_company" />
+    <field name="category" ref="factory_purpose_acceptance" />
+    <field name="equipment_category_ids" eval="[(6, 0, [ref('factory_category_motor')])]" />
+    <field name="inspection_instructions">检修后核对接线盒外观、防护和试运行观察结果。 所有数值阈值仅供演示，不作为实际设备维护标准。</field>
+  </record>
+  <record id="factory_question_motor_acceptance_junction" model="qc.test.question">
+    <field name="name">接线盒状态</field>
+    <field name="test" ref="factory_test_motor_acceptance" />
+    <field name="type">qualitative</field>
+    <field name="sequence" eval="10" />
+    <field name="inspection_required" eval="True" />
+  </record>
+  <record id="factory_question_motor_acceptance_junction_ok" model="qc.test.question.value">
+    <field name="name">封闭完好</field>
+    <field name="test_line" ref="factory_question_motor_acceptance_junction" />
+    <field name="ok" eval="True" />
+  </record>
+  <record id="factory_question_motor_acceptance_junction_bad" model="qc.test.question.value">
+    <field name="name">异常</field>
+    <field name="test_line" ref="factory_question_motor_acceptance_junction" />
+    <field name="ok" eval="False" />
+  </record>
+  <record id="factory_question_motor_acceptance_guard" model="qc.test.question">
+    <field name="name">防护恢复</field>
+    <field name="test" ref="factory_test_motor_acceptance" />
+    <field name="type">qualitative</field>
+    <field name="sequence" eval="20" />
+    <field name="inspection_required" eval="True" />
+  </record>
+  <record id="factory_question_motor_acceptance_guard_ok" model="qc.test.question.value">
+    <field name="name">已恢复</field>
+    <field name="test_line" ref="factory_question_motor_acceptance_guard" />
+    <field name="ok" eval="True" />
+  </record>
+  <record id="factory_question_motor_acceptance_guard_bad" model="qc.test.question.value">
+    <field name="name">未恢复</field>
+    <field name="test_line" ref="factory_question_motor_acceptance_guard" />
+    <field name="ok" eval="False" />
+  </record>
+  <record id="factory_question_motor_acceptance_trial" model="qc.test.question">
+    <field name="name">试运行观察</field>
+    <field name="test" ref="factory_test_motor_acceptance" />
+    <field name="type">qualitative</field>
+    <field name="sequence" eval="30" />
+    <field name="inspection_required" eval="True" />
+  </record>
+  <record id="factory_question_motor_acceptance_trial_ok" model="qc.test.question.value">
+    <field name="name">运行平稳</field>
+    <field name="test_line" ref="factory_question_motor_acceptance_trial" />
+    <field name="ok" eval="True" />
+  </record>
+  <record id="factory_question_motor_acceptance_trial_bad" model="qc.test.question.value">
+    <field name="name">存在异常</field>
+    <field name="test_line" ref="factory_question_motor_acceptance_trial" />
+    <field name="ok" eval="False" />
+  </record>
+  <record id="factory_test_instrument" model="qc.test">
+    <field name="name">仪表｜外观与示值检查</field>
+    <field name="inspection_equipment_use" eval="True" />
+    <field name="company_id" ref="base.main_company" />
+    <field name="category" ref="factory_purpose_daily" />
+    <field name="equipment_category_ids" eval="[(6, 0, [ref('factory_category_instrument')])]" />
+    <field name="inspection_instructions">核对仪表外观、显示及参考示值差异。 所有数值阈值仅供演示，不作为实际设备维护标准。</field>
+  </record>
+  <record id="factory_question_instrument_appearance" model="qc.test.question">
+    <field name="name">外观状态</field>
+    <field name="test" ref="factory_test_instrument" />
+    <field name="type">qualitative</field>
+    <field name="sequence" eval="10" />
+    <field name="inspection_required" eval="True" />
+  </record>
+  <record id="factory_question_instrument_appearance_ok" model="qc.test.question.value">
+    <field name="name">完好</field>
+    <field name="test_line" ref="factory_question_instrument_appearance" />
+    <field name="ok" eval="True" />
+  </record>
+  <record id="factory_question_instrument_appearance_bad" model="qc.test.question.value">
+    <field name="name">破损</field>
+    <field name="test_line" ref="factory_question_instrument_appearance" />
+    <field name="ok" eval="False" />
+  </record>
+  <record id="factory_question_instrument_display" model="qc.test.question">
+    <field name="name">显示状态</field>
+    <field name="test" ref="factory_test_instrument" />
+    <field name="type">qualitative</field>
+    <field name="sequence" eval="20" />
+    <field name="inspection_required" eval="True" />
+  </record>
+  <record id="factory_question_instrument_display_ok" model="qc.test.question.value">
+    <field name="name">清晰稳定</field>
+    <field name="test_line" ref="factory_question_instrument_display" />
+    <field name="ok" eval="True" />
+  </record>
+  <record id="factory_question_instrument_display_bad" model="qc.test.question.value">
+    <field name="name">模糊或跳动</field>
+    <field name="test_line" ref="factory_question_instrument_display" />
+    <field name="ok" eval="False" />
+  </record>
+  <record id="factory_question_instrument_deviation" model="qc.test.question">
+    <field name="name">参考示值偏差</field>
+    <field name="test" ref="factory_test_instrument" />
+    <field name="type">quantitative</field>
+    <field name="sequence" eval="30" />
+    <field name="inspection_required" eval="True" />
+    <field name="min_value" eval="-0.2" />
+    <field name="max_value" eval="0.2" />
+    <field name="uom_id" ref="factory_uom_bar" />
+  </record>
+  <record id="factory_test_safety" model="qc.test">
+    <field name="name">通用｜现场安全确认</field>
+    <field name="inspection_equipment_use" eval="True" />
+    <field name="company_id" ref="base.main_company" />
+    <field name="category" ref="factory_purpose_safety" />
+    <field name="equipment_category_ids" eval="[(6, 0, [ref('factory_category_pump'), ref('factory_category_fan'), ref('factory_category_motor'), ref('factory_category_instrument')])]" />
+    <field name="inspection_instructions">设备周边的现场确认，不替代专业检修和操作规程。 所有数值阈值仅供演示，不作为实际设备维护标准。</field>
+  </record>
+  <record id="factory_question_safety_access" model="qc.test.question">
+    <field name="name">通道状态</field>
+    <field name="test" ref="factory_test_safety" />
+    <field name="type">qualitative</field>
+    <field name="sequence" eval="10" />
+    <field name="inspection_required" eval="True" />
+  </record>
+  <record id="factory_question_safety_access_ok" model="qc.test.question.value">
+    <field name="name">畅通</field>
+    <field name="test_line" ref="factory_question_safety_access" />
+    <field name="ok" eval="True" />
+  </record>
+  <record id="factory_question_safety_access_bad" model="qc.test.question.value">
+    <field name="name">受阻</field>
+    <field name="test_line" ref="factory_question_safety_access" />
+    <field name="ok" eval="False" />
+  </record>
+  <record id="factory_question_safety_obstacle" model="qc.test.question">
+    <field name="name">通道杂物数量</field>
+    <field name="test" ref="factory_test_safety" />
+    <field name="type">quantitative</field>
+    <field name="sequence" eval="20" />
+    <field name="inspection_required" eval="True" />
+    <field name="min_value" eval="0" />
+    <field name="max_value" eval="0" />
+    <field name="uom_id" ref="uom.product_uom_unit" />
+  </record>
+  <record id="factory_question_safety_guard" model="qc.test.question">
+    <field name="name">防护状态</field>
+    <field name="test" ref="factory_test_safety" />
+    <field name="type">qualitative</field>
+    <field name="sequence" eval="30" />
+    <field name="inspection_required" eval="True" />
+  </record>
+  <record id="factory_question_safety_guard_ok" model="qc.test.question.value">
+    <field name="name">完好</field>
+    <field name="test_line" ref="factory_question_safety_guard" />
+    <field name="ok" eval="True" />
+  </record>
+  <record id="factory_question_safety_guard_bad" model="qc.test.question.value">
+    <field name="name">异常</field>
+    <field name="test_line" ref="factory_question_safety_guard" />
+    <field name="ok" eval="False" />
+  </record>
+  <record id="factory_equipment_p01" model="maintenance.equipment">
+    <field name="name">P01｜一号循环水泵</field>
+    <field name="serial_no">P01</field>
+    <field name="company_id" ref="base.main_company" />
+    <field name="category_id" ref="factory_category_pump" />
+    <field name="maintenance_team_id" ref="factory_team_mechanical" />
+    <field name="owner_user_id" ref="factory_user_manager" />
+    <field name="technician_user_id" ref="factory_user_inspector" />
+    <field name="inspection_test_id" ref="factory_test_pump_daily" />
+    <field name="inspection_supervisor_id" ref="factory_user_manager" />
+    <field name="note">循环水站 A 区，工作泵。完成今日检查的推荐入口。</field>
+  </record>
+  <record id="factory_equipment_p02" model="maintenance.equipment">
+    <field name="name">P02｜二号循环水泵</field>
+    <field name="serial_no">P02</field>
+    <field name="company_id" ref="base.main_company" />
+    <field name="category_id" ref="factory_category_pump" />
+    <field name="maintenance_team_id" ref="factory_team_mechanical" />
+    <field name="owner_user_id" ref="factory_user_manager" />
+    <field name="technician_user_id" ref="factory_user_inspector" />
+    <field name="inspection_test_id" ref="factory_test_pump_diagnostic" />
+    <field name="inspection_supervisor_id" ref="factory_user_manager" />
+    <field name="note">循环水站 A 区，近期压力读数偏高，已安排专项排查。</field>
+  </record>
+  <record id="factory_equipment_p03" model="maintenance.equipment">
+    <field name="name">P03｜备用循环水泵</field>
+    <field name="serial_no">P03</field>
+    <field name="company_id" ref="base.main_company" />
+    <field name="category_id" ref="factory_category_pump" />
+    <field name="maintenance_team_id" ref="factory_team_mechanical" />
+    <field name="owner_user_id" ref="factory_user_manager" />
+    <field name="technician_user_id" ref="factory_user_mechanic" />
+    <field name="inspection_test_id" ref="factory_test_pump_acceptance" />
+    <field name="inspection_supervisor_id" ref="factory_user_manager" />
+    <field name="note">循环水站备用机组，密封维修完成，等待检修后验收。</field>
+  </record>
+  <record id="factory_equipment_p04" model="maintenance.equipment">
+    <field name="name">P04｜冷却水泵</field>
+    <field name="serial_no">P04</field>
+    <field name="company_id" ref="base.main_company" />
+    <field name="category_id" ref="factory_category_pump" />
+    <field name="maintenance_team_id" ref="factory_team_mechanical" />
+    <field name="owner_user_id" ref="factory_user_manager" />
+    <field name="technician_user_id" ref="factory_user_inspector" />
+    <field name="inspection_test_id" ref="factory_test_pump_daily" />
+    <field name="inspection_supervisor_id" ref="factory_user_manager" />
+    <field name="note">冷却水站，每日例行检查。</field>
+  </record>
+  <record id="factory_equipment_p05" model="maintenance.equipment">
+    <field name="name">P05｜排水泵</field>
+    <field name="serial_no">P05</field>
+    <field name="company_id" ref="base.main_company" />
+    <field name="category_id" ref="factory_category_pump" />
+    <field name="maintenance_team_id" ref="factory_team_mechanical" />
+    <field name="owner_user_id" ref="factory_user_manager" />
+    <field name="technician_user_id" ref="factory_user_mechanic" />
+    <field name="inspection_test_id" ref="factory_test_pump_daily" />
+    <field name="inspection_supervisor_id" ref="factory_user_manager" />
+    <field name="note">排水区，当前停用待保养，周期检查已暂停。</field>
+  </record>
+  <record id="factory_equipment_f01" model="maintenance.equipment">
+    <field name="name">F01｜一号排风机</field>
+    <field name="serial_no">F01</field>
+    <field name="company_id" ref="base.main_company" />
+    <field name="category_id" ref="factory_category_fan" />
+    <field name="maintenance_team_id" ref="factory_team_mechanical" />
+    <field name="owner_user_id" ref="factory_user_manager" />
+    <field name="technician_user_id" ref="factory_user_inspector" />
+    <field name="inspection_test_id" ref="factory_test_fan_daily" />
+    <field name="inspection_supervisor_id" ref="factory_user_manager" />
+    <field name="note">生产区东侧，最近一次检查合格，但另有一项异常等待主管确认。</field>
+  </record>
+  <record id="factory_equipment_f02" model="maintenance.equipment">
+    <field name="name">F02｜二号排风机</field>
+    <field name="serial_no">F02</field>
+    <field name="company_id" ref="base.main_company" />
+    <field name="category_id" ref="factory_category_fan" />
+    <field name="maintenance_team_id" ref="factory_team_mechanical" />
+    <field name="owner_user_id" ref="factory_user_manager" />
+    <field name="technician_user_id" ref="factory_user_inspector" />
+    <field name="inspection_test_id" ref="factory_test_fan_daily" />
+    <field name="inspection_supervisor_id" ref="factory_user_manager" />
+    <field name="note">生产区西侧，双周检查；轴承异响维修处理中。</field>
+  </record>
+  <record id="factory_equipment_f03" model="maintenance.equipment">
+    <field name="name">F03｜冷却塔风机</field>
+    <field name="serial_no">F03</field>
+    <field name="company_id" ref="base.main_company" />
+    <field name="category_id" ref="factory_category_fan" />
+    <field name="maintenance_team_id" ref="factory_team_mechanical" />
+    <field name="owner_user_id" ref="factory_user_manager" />
+    <field name="technician_user_id" ref="factory_user_mechanic" />
+    <field name="inspection_test_id" ref="factory_test_fan_daily" />
+    <field name="inspection_supervisor_id" ref="factory_user_manager" />
+    <field name="note">冷却塔顶部，按月末安排检查。</field>
+  </record>
+  <record id="factory_equipment_m01" model="maintenance.equipment">
+    <field name="name">M01｜循环水泵电机</field>
+    <field name="serial_no">M01</field>
+    <field name="company_id" ref="base.main_company" />
+    <field name="category_id" ref="factory_category_motor" />
+    <field name="maintenance_team_id" ref="factory_team_electrical" />
+    <field name="owner_user_id" ref="factory_user_manager" />
+    <field name="technician_user_id" ref="factory_user_electrician" />
+    <field name="inspection_test_id" ref="factory_test_motor_daily" />
+    <field name="inspection_supervisor_id" ref="factory_user_manager" />
+    <field name="note">循环水站电机，检查发现温度偏高，维修处理中。</field>
+  </record>
+  <record id="factory_equipment_m02" model="maintenance.equipment">
+    <field name="name">M02｜冷却塔电机</field>
+    <field name="serial_no">M02</field>
+    <field name="company_id" ref="base.main_company" />
+    <field name="category_id" ref="factory_category_motor" />
+    <field name="maintenance_team_id" ref="factory_team_electrical" />
+    <field name="owner_user_id" ref="factory_user_manager" />
+    <field name="technician_user_id" ref="factory_user_electrician_2" />
+    <field name="inspection_test_id" ref="factory_test_motor_daily" />
+    <field name="inspection_supervisor_id" ref="factory_user_manager" />
+    <field name="note">冷却塔驱动电机，已安排预防性保养。</field>
+  </record>
+  <record id="factory_equipment_i01" model="maintenance.equipment">
+    <field name="name">I01｜循环水出口压力表</field>
+    <field name="serial_no">I01</field>
+    <field name="company_id" ref="base.main_company" />
+    <field name="category_id" ref="factory_category_instrument" />
+    <field name="maintenance_team_id" ref="factory_team_instrument" />
+    <field name="owner_user_id" ref="factory_user_manager" />
+    <field name="technician_user_id" ref="factory_user_instrument" />
+    <field name="inspection_test_id" ref="factory_test_instrument" />
+    <field name="inspection_supervisor_id" ref="factory_user_manager" />
+    <field name="note">循环水出口，示值偏差请求已从机械组移交仪表组。</field>
+  </record>
+  <record id="factory_equipment_i02" model="maintenance.equipment">
+    <field name="name">I02｜冷却水压力传感器</field>
+    <field name="serial_no">I02</field>
+    <field name="company_id" ref="base.main_company" />
+    <field name="category_id" ref="factory_category_instrument" />
+    <field name="maintenance_team_id" ref="factory_team_instrument" />
+    <field name="owner_user_id" ref="factory_user_manager" />
+    <field name="technician_user_id" ref="factory_user_instrument_2" />
+    <field name="inspection_test_id" ref="factory_test_instrument" />
+    <field name="inspection_supervisor_id" ref="factory_user_manager" />
+    <field name="note">冷却水站，检查发现显示跳动，等待主管确认。</field>
+  </record>
+</odoo>

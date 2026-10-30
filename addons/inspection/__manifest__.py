@@ -1,0 +1,42 @@
+{
+    "name": "Equipment Inspection",
+    "version": "19.0.1.3",
+    "author": "Learning project contributors",
+    "license": "AGPL-3",
+    "category": "Maintenance",
+    "summary": "Equipment inspections and maintenance follow-up",
+    "depends": [
+        "maintenance",
+        "quality_control_oca",
+        "mail",
+    ],
+    "data": [
+        "security/groups.xml",
+        "security/ir.model.access.csv",
+        "security/rules.xml",
+        "views/inspection_views.xml",
+        "views/maintenance_views.xml",
+        "views/inspection_calendar_views.xml",
+        "wizard/generate_views.xml",
+        "data/inspection_activity_data.xml",
+        "data/cron.xml",
+        "report/inspection_report.xml",
+    ],
+    "demo": [
+        "demo/inspection_lang_demo.xml",
+        "demo/factory_demo.xml",
+    ],
+    "assets": {
+        "web.assets_backend": [
+            "inspection/static/src/js/inspection_calendar_model.js",
+            "inspection/static/src/js/inspection_calendar_renderer.js",
+            "inspection/static/src/js/inspection_calendar_controller.js",
+            "inspection/static/src/js/inspection_calendar_plan_dialog.js",
+            "inspection/static/src/js/inspection_calendar_view.js",
+            "inspection/static/src/xml/inspection_calendar_templates.xml",
+        ],
+    },
+    "post_init_hook": "post_init_hook",
+    "installable": True,
+    "application": False,
+}

@@ -1,0 +1,9 @@
+<odoo>
+  <record id="report_inspection" model="ir.actions.report"><field name="name">设备检查记录</field><field name="model">qc.inspection</field><field name="report_type">qweb-pdf</field><field name="report_name">inspection.report_equipment_inspection</field><field name="binding_model_id" ref="quality_control_oca.model_qc_inspection"/></record>
+  <template id="report_equipment_inspection"><t t-call="web.html_container"><t t-foreach="docs" t-as="o"><t t-call="web.external_layout"><div class="page">
+    <h2>设备检查记录 <span t-field="o.name"/></h2><p>设备：<span t-field="o.equipment_id.name"/>　日期：<span t-field="o.inspection_date"/></p><p>检查方案：<span t-field="o.inspection_test_name"/>　检查员：<span t-field="o.user.name"/></p>
+    <table class="table table-sm"><thead><tr><th>项目</th><th>当次标准</th><th>答案</th><th>最终判定</th></tr></thead><tbody><tr t-foreach="o.inspection_lines" t-as="line"><td><span t-field="line.name"/></td><td><t t-if="line.question_type == 'quantitative'"><span t-field="line.min_value"/> ～ <span t-field="line.max_value"/> <span t-field="line.inspection_unit_name"/></t></td><td><span t-if="line.question_type == 'qualitative'" t-field="line.inspection_answer_label"/><t t-if="line.question_type == 'quantitative'"><span t-field="line.quantitative_value"/> <span t-field="line.uom_id.name"/></t></td><td><span t-field="line.inspection_result"/></td></tr></tbody></table>
+    <div t-if="o.internal_notes"><strong>检查备注</strong><div t-field="o.internal_notes" style="white-space: pre-wrap;"/></div>
+    <p>维修请求：<span t-field="o.maintenance_request_id.name"/></p>
+  </div></t></t></t></template>
+</odoo>

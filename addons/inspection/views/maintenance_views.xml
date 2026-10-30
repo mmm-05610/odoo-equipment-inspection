@@ -1,0 +1,104 @@
+<odoo>
+  <record id="equipment_form" model="ir.ui.view"><field name="name">设备检查扩展</field><field name="model">maintenance.equipment</field><field name="inherit_id" ref="maintenance.hr_equipment_view_form"/><field name="arch" type="xml">
+    <xpath expr="//div[@name='button_box']" position="inside"><button name="action_view_inspections" type="object" class="oe_stat_button" icon="fa-check-square-o" groups="inspection.group_user"><field name="inspection_count" widget="statinfo" string="检查记录"/></button></xpath>
+    <xpath expr="//notebook" position="inside"><page string="检查" groups="inspection.group_user">
+      <field name="inspection_cycle_can_edit" invisible="1"/>
+
+      <!-- ① 最近完成的检查：只表达“最近一次结果”，不据此宣称设备正常。 -->
+      <group string="最近完成的检查">
+        <div colspan="2" invisible="inspection_last_completed_id" class="text-muted">暂无检查记录</div>
+        <div colspan="2" invisible="not inspection_last_completed_id">
+          <div class="d-flex align-items-center gap-2">
+            <i class="fa fa-check-circle fa-lg text-success" title="最近一次检查合格" invisible="inspection_last_completed_state != 'success'"/>
+            <i class="fa fa-exclamation-triangle fa-lg text-danger" title="最近一次检查异常" invisible="inspection_last_completed_state != 'failed'"/>
+            <field name="inspection_last_completed_state" widget="badge" class="oe_inline"
+                   decoration-success="inspection_last_completed_state == 'success'"
+                   decoration-danger="inspection_last_completed_state == 'failed'"/>
+            <span class="text-muted">检查日期</span><field name="inspection_last_date" class="oe_inline"/>
+            <span class="text-muted">方案</span><field name="inspection_last_completed_test" class="oe_inline"/>
+            <button name="action_view_last_completed_inspection" type="object" string="查看详情" class="btn-link p-0"/>
+          </div>
+          <div class="text-muted mt-1">这里只显示最近一次已完成检查的结果，不代表设备当前运行状态。</div>
+        </div>
+        <div colspan="2" class="mt-2" invisible="not inspection_waiting_count">
+          <i class="fa fa-clock-o text-warning"/> <span class="text-warning">待主管确认：</span>
+          <field name="inspection_waiting_count" class="oe_inline"/>
+          <button name="action_view_waiting_inspections" type="object" string="查看" class="btn-link p-0"/>
+        </div>
+        <div colspan="2" class="mt-1" invisible="not inspection_ready_count">
+          <i class="fa fa-tasks text-info"/> <span class="text-info">待检查：</span>
+          <field name="inspection_ready_count" class="oe_inline"/>
+          <button name="action_view_ready_inspections" type="object" string="查看" class="btn-link p-0"/>
+        </div>
+      </group>
+
+      <!-- ② 最近 5 条记录：只读列表，点击行内按钮进入现有检查表单。 -->
+      <separator string="最近检查记录"/>
+      <field name="inspection_recent_ids" nolabel="1" readonly="1">
+        <list create="false" delete="false" edit="false" default_order="inspection_date desc, id desc">
+          <field name="inspection_date" string="业务日期"/>
+          <field name="inspection_test_name" string="方案"/>
+          <field name="state" string="状态" widget="badge"/>
+          <field name="user" string="检查员"/>
+          <button name="action_open_form" type="object" icon="fa-external-link" title="打开检查记录"/>
+        </list>
+      </field>
+      <div class="text-end">
+        <button name="action_view_inspections" type="object" string="查看全部" class="btn-link"/>
+      </div>
+
+      <!-- ③ 配置区域：与历史列表留白；不显示“检查设置”标题。 -->
+      <div class="mt-4"/>
+      <group>
+        <group>
+          <label for="inspection_test_id"/>
+          <div class="o_row">
+            <field name="inspection_test_id" options="{'no_create': True}"/>
+            <button name="action_generate_inspection" type="object" string="生成一次检查" class="btn-secondary" invisible="not inspection_test_id"/>
+          </div>
+          <field name="inspection_supervisor_id" options="{'no_create': True}" readonly="not inspection_cycle_can_edit"/>
+        </group>
+        <group>
+          <field name="inspection_cycle_enabled" invisible="1"/>
+          <field name="inspection_cycle_paused" invisible="1"/>
+          <field name="inspection_cycle_active" readonly="not inspection_cycle_can_edit"/>
+          <label for="inspection_cycle_interval" string="检查周期" invisible="not (inspection_cycle_active or inspection_cycle_enabled)"/>
+          <div class="o_row" invisible="not (inspection_cycle_active or inspection_cycle_enabled)">
+            <field name="inspection_cycle_interval" class="oe_inline" readonly="not inspection_cycle_can_edit"/>
+            <field name="inspection_cycle_unit" class="oe_inline" readonly="not inspection_cycle_can_edit"/>
+          </div>
+          <field name="inspection_cycle_start_date" readonly="not inspection_cycle_can_edit" invisible="not (inspection_cycle_active or inspection_cycle_enabled)"/>
+          <field name="inspection_cycle_next_date" readonly="1" invisible="not inspection_cycle_active"/>
+          <field name="inspection_cycle_last_error" invisible="not inspection_cycle_last_error"/>
+        </group>
+      </group>
+      <div class="text-muted" invisible="not inspection_cycle_enabled or inspection_cycle_active">周期检查已关闭，配置保留；重新开启后最多补最近一个已到期周期。</div>
+      <div class="text-muted" invisible="not inspection_cycle_active or not inspection_cycle_is_due">本次周期已到期，等待后台计划任务，或由主管点击“立即生成到期检查”。</div>
+      <div class="mt-2">
+        <button name="action_generate_due_cycle_inspection" type="object" string="立即生成到期检查" class="oe_highlight" groups="inspection.group_manager" invisible="not inspection_cycle_active"/>
+      </div>
+    </page></xpath>
+  </field></record>
+
+  <record id="request_form" model="ir.ui.view">
+    <field name="name">维修请求检查来源</field>
+    <field name="model">maintenance.request</field>
+    <field name="inherit_id" ref="maintenance.hr_equipment_request_view_form"/>
+    <field name="arch" type="xml">
+      <field name="equipment_id" position="after">
+        <field name="inspection_id" readonly="1" invisible="not inspection_id" groups="inspection.group_user"/>
+      </field>
+      <xpath expr="//page[field[@name='description']]" position="attributes">
+        <attribute name="string">Problem Description</attribute>
+      </xpath>
+      <xpath expr="//page[.//field[@name='instruction_type']]" position="attributes">
+        <attribute name="string">Work Instructions</attribute>
+      </xpath>
+    </field>
+  </record>
+
+  <record id="request_kanban" model="ir.ui.view"><field name="name">维修请求检查来源（看板）</field><field name="model">maintenance.request</field><field name="inherit_id" ref="maintenance.hr_equipment_request_view_kanban"/><field name="arch" type="xml">
+    <field name="archive" position="after"><field name="inspection_id" invisible="1"/><field name="inspection_source_label" invisible="1"/></field>
+    <xpath expr="//t[@t-name='card']" position="inside"><span t-if="record.inspection_id.raw_value" class="text-muted small">来源：<field name="inspection_source_label"/></span></xpath>
+  </field></record>
+</odoo>
