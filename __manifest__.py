@@ -1,6 +1,6 @@
 {
     "name": "Equipment Inspection",
-    "version": "19.0.1.3",
+    "version": "1.0",
     "author": "Learning project contributors",
     "license": "AGPL-3",
     "category": "Maintenance",
@@ -25,6 +25,9 @@
     "demo": [
         "demo/inspection_lang_demo.xml",
         "demo/factory_demo.xml",
+        "demo/factory_history_demo.xml",
+        "demo/factory_repair_demo.xml",
+        "demo/factory_cycle_demo.xml",
     ],
     "assets": {
         "web.assets_backend": [
@@ -36,7 +39,6 @@
             "inspection/static/src/xml/inspection_calendar_templates.xml",
         ],
     },
-    "post_init_hook": "post_init_hook",
     "installable": True,
     "application": False,
 }

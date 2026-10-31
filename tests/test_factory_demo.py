@@ -3,7 +3,8 @@ from collections import Counter
 
 from odoo.tests import TransactionCase, tagged
 
-from ..demo_seed import seed_factory_history
+from odoo.modules.module import Manifest
+from odoo.tools import convert_file
 
 
 @tagged('post_install', '-at_install')
@@ -56,19 +57,21 @@ class TestFactoryDemo(TransactionCase):
     def test_repair_round_trip_and_reassignment(self):
         for index in (11, 22, 23):
             inspection = self.ref('history_%02d' % index)
-            request = self.ref('repair_from_%02d' % index)
+            request = inspection.maintenance_request_id
+            self.assertTrue(request)
             self.assertEqual(inspection.maintenance_request_id, request)
             self.assertEqual(request.inspection_id, inspection)
-        request = self.ref('repair_from_23')
+        request = self.ref('history_23').maintenance_request_id
         self.assertEqual(request.maintenance_team_id, self.ref('team_instrument'))
         self.assertEqual(request.user_id, self.ref('user_instrument'))
 
-    def test_seed_is_repeatable_without_resetting_user_work(self):
+    def test_demo_update_preserves_user_work(self):
         equipment = self.ref('equipment_p01')
         equipment.note = 'Visitor observation to preserve'
         saved_note = equipment.note
         before = self.env['qc.inspection'].search_count([])
-        seed_factory_history(self.env)
+        for path in Manifest.for_addon('inspection')['demo']:
+            convert_file(self.env, 'inspection', path, {}, mode='update', noupdate=True)
         self.assertEqual(self.env['qc.inspection'].search_count([]), before)
         self.assertEqual(equipment.note, saved_note)
 

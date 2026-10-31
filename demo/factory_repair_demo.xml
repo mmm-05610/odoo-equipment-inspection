@@ -1,0 +1,106 @@
+<?xml version='1.0' encoding='utf-8'?>
+<odoo noupdate="1">
+  <!-- 异常维修由检查单动作创建，保留双向关联；其他维修用原生 maintenance.request 记录。 -->
+  <function model="qc.inspection" name="action_create_repair">
+    <value eval="[ref('factory_history_11')]" />
+  </function>
+  <function model="maintenance.request" name="write">
+    <function model="maintenance.request" name="search" eval="[[('inspection_id', '=', ref('factory_history_11'))]]" />
+    <value eval="{'request_date': (datetime.now(pytz.timezone('Asia/Shanghai')).date() + timedelta(days=-10)), 'schedule_date': datetime.combine((datetime.now(pytz.timezone('Asia/Shanghai')).date() + timedelta(days=-8)), datetime.min.time()).replace(hour=2, minute=0), 'stage_id': ref('maintenance.stage_3')}" />
+  </function>
+  <function model="maintenance.request" name="write">
+    <function model="maintenance.request" name="search" eval="[[('inspection_id', '=', ref('factory_history_11'))]]" />
+    <value eval="{'close_date': (datetime.now(pytz.timezone('Asia/Shanghai')).date() + timedelta(days=-7))}" />
+  </function>
+  <function model="qc.inspection" name="action_create_repair">
+    <value eval="[ref('factory_history_22')]" />
+  </function>
+  <function model="maintenance.request" name="write">
+    <function model="maintenance.request" name="search" eval="[[('inspection_id', '=', ref('factory_history_22'))]]" />
+    <value eval="{'request_date': (datetime.now(pytz.timezone('Asia/Shanghai')).date() + timedelta(days=-3)), 'schedule_date': datetime.combine((datetime.now(pytz.timezone('Asia/Shanghai')).date() + timedelta(days=0)), datetime.min.time()).replace(hour=2, minute=0), 'stage_id': ref('maintenance.stage_1')}" />
+  </function>
+  <function model="qc.inspection" name="action_create_repair">
+    <value eval="[ref('factory_history_23')]" />
+  </function>
+  <function model="maintenance.request" name="write">
+    <function model="maintenance.request" name="search" eval="[[('inspection_id', '=', ref('factory_history_23'))]]" />
+    <value eval="{'request_date': (datetime.now(pytz.timezone('Asia/Shanghai')).date() + timedelta(days=-6)), 'schedule_date': datetime.combine((datetime.now(pytz.timezone('Asia/Shanghai')).date() + timedelta(days=1)), datetime.min.time()).replace(hour=2, minute=0), 'stage_id': ref('maintenance.stage_0')}" />
+  </function>
+  <function model="maintenance.request" name="write">
+    <function model="maintenance.request" name="search" eval="[[('inspection_id', '=', ref('factory_history_23'))]]" />
+    <value eval="{'maintenance_team_id': ref('factory_team_mechanical'), 'user_id': ref('factory_user_mechanic')}" />
+  </function>
+  <function model="maintenance.request" name="message_post">
+    <function model="maintenance.request" name="search" eval="[[('inspection_id', '=', ref('factory_history_23'))]]" />
+    <value name="body" eval="'机械组核对设备运行情况后，转交仪表组复核压力表示值。'" />
+  </function>
+  <function model="maintenance.request" name="write">
+    <function model="maintenance.request" name="search" eval="[[('inspection_id', '=', ref('factory_history_23'))]]" />
+    <value eval="{'maintenance_team_id': ref('factory_team_instrument'), 'user_id': ref('factory_user_instrument')}" />
+  </function>
+  <record id="factory_repair_native_01" model="maintenance.request">
+    <field name="name">二号排风机｜轴承异响处理</field>
+    <field name="equipment_id" ref="factory_equipment_f02" />
+    <field name="company_id" ref="base.main_company" />
+    <field name="maintenance_team_id" ref="factory_team_mechanical" />
+    <field name="user_id" ref="factory_user_inspector" />
+    <field name="owner_user_id" ref="factory_user_manager" />
+    <field name="request_date" eval="(datetime.now(pytz.timezone('Asia/Shanghai')).date() + timedelta(days=-1))" />
+    <field name="maintenance_type">corrective</field>
+    <field name="stage_id" ref="maintenance.stage_1" />
+    <field name="description">巡检人员报修，机械组正在检查轴承和连接部位。</field>
+    <field name="schedule_date" eval="datetime.combine((datetime.now(pytz.timezone('Asia/Shanghai')).date() + timedelta(days=0)), datetime.min.time()).replace(hour=3, minute=0)" />
+  </record>
+  <record id="factory_repair_native_02" model="maintenance.request">
+    <field name="name">冷却塔电机｜接线盒检查与保养</field>
+    <field name="equipment_id" ref="factory_equipment_m02" />
+    <field name="company_id" ref="base.main_company" />
+    <field name="maintenance_team_id" ref="factory_team_electrical" />
+    <field name="user_id" ref="factory_user_electrician_2" />
+    <field name="owner_user_id" ref="factory_user_manager" />
+    <field name="request_date" eval="(datetime.now(pytz.timezone('Asia/Shanghai')).date() + timedelta(days=-1))" />
+    <field name="maintenance_type">preventive</field>
+    <field name="stage_id" ref="maintenance.stage_0" />
+    <field name="description">计划性保养，检查接线盒外观和密封情况。</field>
+    <field name="schedule_date" eval="datetime.combine((datetime.now(pytz.timezone('Asia/Shanghai')).date() + timedelta(days=2)), datetime.min.time()).replace(hour=3, minute=0)" />
+  </record>
+  <record id="factory_repair_native_03" model="maintenance.request">
+    <field name="name">排水泵｜停用期间清洁保养</field>
+    <field name="equipment_id" ref="factory_equipment_p05" />
+    <field name="company_id" ref="base.main_company" />
+    <field name="maintenance_team_id" ref="factory_team_mechanical" />
+    <field name="user_id" ref="factory_user_mechanic" />
+    <field name="owner_user_id" ref="factory_user_manager" />
+    <field name="request_date" eval="(datetime.now(pytz.timezone('Asia/Shanghai')).date() + timedelta(days=-1))" />
+    <field name="maintenance_type">preventive</field>
+    <field name="stage_id" ref="maintenance.stage_0" />
+    <field name="description">设备暂时停用，清理现场后再恢复周期检查。</field>
+    <field name="schedule_date" eval="datetime.combine((datetime.now(pytz.timezone('Asia/Shanghai')).date() + timedelta(days=3)), datetime.min.time()).replace(hour=3, minute=0)" />
+  </record>
+  <record id="factory_repair_native_04" model="maintenance.request">
+    <field name="name">冷却塔风机｜皮带定期更换</field>
+    <field name="equipment_id" ref="factory_equipment_f03" />
+    <field name="company_id" ref="base.main_company" />
+    <field name="maintenance_team_id" ref="factory_team_mechanical" />
+    <field name="user_id" ref="factory_user_mechanic" />
+    <field name="owner_user_id" ref="factory_user_manager" />
+    <field name="request_date" eval="(datetime.now(pytz.timezone('Asia/Shanghai')).date() + timedelta(days=-6))" />
+    <field name="maintenance_type">preventive</field>
+    <field name="stage_id" ref="maintenance.stage_3" />
+    <field name="description">定期保养已完成，后续检查记录可在设备页查看。</field>
+    <field name="schedule_date" eval="datetime.combine((datetime.now(pytz.timezone('Asia/Shanghai')).date() + timedelta(days=-5)), datetime.min.time()).replace(hour=3, minute=0)" />
+    <field name="close_date" eval="(datetime.now(pytz.timezone('Asia/Shanghai')).date() + timedelta(days=-4))" />
+  </record>
+  <record id="factory_repair_native_05" model="maintenance.request">
+    <field name="name">冷却水泵｜底座紧固复查</field>
+    <field name="equipment_id" ref="factory_equipment_p04" />
+    <field name="company_id" ref="base.main_company" />
+    <field name="maintenance_team_id" ref="factory_team_mechanical" />
+    <field name="user_id" ref="factory_user_inspector" />
+    <field name="owner_user_id" ref="factory_user_manager" />
+    <field name="request_date" eval="(datetime.now(pytz.timezone('Asia/Shanghai')).date() + timedelta(days=-1))" />
+    <field name="maintenance_type">corrective</field>
+    <field name="stage_id" ref="maintenance.stage_0" />
+    <field name="description">现场人员报修，等待机械组安排时间。</field>
+  </record>
+</odoo>

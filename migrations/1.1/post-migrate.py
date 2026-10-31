@@ -145,12 +145,6 @@ def _drop_legacy_indexes(env):
     env.cr.execute('DROP INDEX IF EXISTS qc_inspection_equipment_daily_unique')
 
 
-def _sync_activities_and_demo(env):
-    from odoo.addons.inspection.hooks import prepare_demo_history, sync_runtime
-    sync_runtime(env)
-    prepare_demo_history(env)
-
-
 def migrate(cr, version):
     if not version:
         return
@@ -161,4 +155,4 @@ def migrate(cr, version):
     _backfill_cycle_dates(env)
     _convert_daily_flag(env)
     _update_legacy_cron(env)
-    _sync_activities_and_demo(env)
+    env['qc.inspection']._sync_inspection_activities()

@@ -1,0 +1,634 @@
+<?xml version='1.0' encoding='utf-8'?>
+<odoo noupdate="1">
+  <!-- 24 张检查历史：record 创建草稿和方案快照，function 填写答案并执行真实业务动作。日期相对安装日，时间字段按 UTC 存储。 -->
+  <!-- 01 · P01 · success -->
+  <function model="qc.test.question" name="write">
+    <value eval="[ref('factory_question_pump_daily_pressure')]" />
+    <value eval="{'max_value': 9}" />
+  </function>
+  <record id="factory_history_01" model="qc.inspection">
+    <field name="equipment_id" ref="factory_equipment_p01" />
+    <field name="inspection_date" eval="(datetime.now(pytz.timezone('Asia/Shanghai')).date() + timedelta(days=-12))" />
+    <field name="inspection_source">manual</field>
+    <field name="date" eval="datetime.combine((datetime.now(pytz.timezone('Asia/Shanghai')).date() + timedelta(days=-12)), datetime.min.time()).replace(hour=1, minute=1)" />
+    <field name="internal_notes">早班巡视：密封干燥，运行声音平稳。</field>
+  </record>
+  <function model="qc.test.question" name="write">
+    <value eval="[ref('factory_question_pump_daily_pressure')]" />
+    <value eval="{'max_value': 8}" />
+  </function>
+  <function model="qc.inspection" name="action_todo">
+    <value eval="[ref('factory_history_01')]" />
+  </function>
+  <function model="qc.inspection.line" name="write">
+    <function model="qc.inspection.line" name="search" eval="[[('inspection_id', '=', ref('factory_history_01')), ('test_line', '=', ref('factory_question_pump_daily_seal'))]]" />
+    <value eval="{'qualitative_value': ref('factory_question_pump_daily_seal_ok')}" />
+  </function>
+  <function model="qc.inspection.line" name="write">
+    <function model="qc.inspection.line" name="search" eval="[[('inspection_id', '=', ref('factory_history_01')), ('test_line', '=', ref('factory_question_pump_daily_pressure'))]]" />
+    <value eval="{'quantitative_value': 6.8, 'inspection_numeric_answered': True}" />
+  </function>
+  <function model="qc.inspection.line" name="write">
+    <function model="qc.inspection.line" name="search" eval="[[('inspection_id', '=', ref('factory_history_01')), ('test_line', '=', ref('factory_question_pump_daily_sound'))]]" />
+    <value eval="{'qualitative_value': ref('factory_question_pump_daily_sound_ok')}" />
+  </function>
+  <function model="qc.inspection" name="action_confirm">
+    <value eval="[ref('factory_history_01')]" />
+  </function>
+  <function model="qc.inspection" name="write">
+    <value eval="[ref('factory_history_01')]" />
+    <value eval="{'date_done': datetime.combine((datetime.now(pytz.timezone('Asia/Shanghai')).date() + timedelta(days=-12)), datetime.min.time()).replace(hour=2, minute=1)}" />
+  </function>
+  <!-- 02 · P01 · success -->
+  <record id="factory_history_02" model="qc.inspection">
+    <field name="equipment_id" ref="factory_equipment_p01" />
+    <field name="inspection_date" eval="(datetime.now(pytz.timezone('Asia/Shanghai')).date() + timedelta(days=-10))" />
+    <field name="inspection_source">manual</field>
+    <field name="date" eval="datetime.combine((datetime.now(pytz.timezone('Asia/Shanghai')).date() + timedelta(days=-10)), datetime.min.time()).replace(hour=1, minute=2)" />
+    <field name="internal_notes">复核出口读数，现场未见渗漏。</field>
+  </record>
+  <function model="qc.inspection" name="action_todo">
+    <value eval="[ref('factory_history_02')]" />
+  </function>
+  <function model="qc.inspection.line" name="write">
+    <function model="qc.inspection.line" name="search" eval="[[('inspection_id', '=', ref('factory_history_02')), ('test_line', '=', ref('factory_question_pump_daily_seal'))]]" />
+    <value eval="{'qualitative_value': ref('factory_question_pump_daily_seal_ok')}" />
+  </function>
+  <function model="qc.inspection.line" name="write">
+    <function model="qc.inspection.line" name="search" eval="[[('inspection_id', '=', ref('factory_history_02')), ('test_line', '=', ref('factory_question_pump_daily_pressure'))]]" />
+    <value eval="{'quantitative_value': 6.65, 'inspection_numeric_answered': True}" />
+  </function>
+  <function model="qc.inspection.line" name="write">
+    <function model="qc.inspection.line" name="search" eval="[[('inspection_id', '=', ref('factory_history_02')), ('test_line', '=', ref('factory_question_pump_daily_sound'))]]" />
+    <value eval="{'qualitative_value': ref('factory_question_pump_daily_sound_ok')}" />
+  </function>
+  <function model="qc.inspection" name="action_confirm">
+    <value eval="[ref('factory_history_02')]" />
+  </function>
+  <function model="qc.inspection" name="write">
+    <value eval="[ref('factory_history_02')]" />
+    <value eval="{'date_done': datetime.combine((datetime.now(pytz.timezone('Asia/Shanghai')).date() + timedelta(days=-10)), datetime.min.time()).replace(hour=2, minute=2)}" />
+  </function>
+  <!-- 03 · P01 · success -->
+  <record id="factory_history_03" model="qc.inspection">
+    <field name="equipment_id" ref="factory_equipment_p01" />
+    <field name="inspection_date" eval="(datetime.now(pytz.timezone('Asia/Shanghai')).date() + timedelta(days=-8))" />
+    <field name="inspection_source">manual</field>
+    <field name="date" eval="datetime.combine((datetime.now(pytz.timezone('Asia/Shanghai')).date() + timedelta(days=-8)), datetime.min.time()).replace(hour=1, minute=3)" />
+    <field name="internal_notes">完成例行巡视，通道畅通。</field>
+  </record>
+  <function model="qc.inspection" name="action_todo">
+    <value eval="[ref('factory_history_03')]" />
+  </function>
+  <function model="qc.inspection.line" name="write">
+    <function model="qc.inspection.line" name="search" eval="[[('inspection_id', '=', ref('factory_history_03')), ('test_line', '=', ref('factory_question_pump_daily_seal'))]]" />
+    <value eval="{'qualitative_value': ref('factory_question_pump_daily_seal_ok')}" />
+  </function>
+  <function model="qc.inspection.line" name="write">
+    <function model="qc.inspection.line" name="search" eval="[[('inspection_id', '=', ref('factory_history_03')), ('test_line', '=', ref('factory_question_pump_daily_pressure'))]]" />
+    <value eval="{'quantitative_value': 6.95, 'inspection_numeric_answered': True}" />
+  </function>
+  <function model="qc.inspection.line" name="write">
+    <function model="qc.inspection.line" name="search" eval="[[('inspection_id', '=', ref('factory_history_03')), ('test_line', '=', ref('factory_question_pump_daily_sound'))]]" />
+    <value eval="{'qualitative_value': ref('factory_question_pump_daily_sound_ok')}" />
+  </function>
+  <function model="qc.inspection" name="action_confirm">
+    <value eval="[ref('factory_history_03')]" />
+  </function>
+  <function model="qc.inspection" name="write">
+    <value eval="[ref('factory_history_03')]" />
+    <value eval="{'date_done': datetime.combine((datetime.now(pytz.timezone('Asia/Shanghai')).date() + timedelta(days=-8)), datetime.min.time()).replace(hour=2, minute=3)}" />
+  </function>
+  <!-- 04 · P01 · success -->
+  <record id="factory_history_04" model="qc.inspection">
+    <field name="equipment_id" ref="factory_equipment_p01" />
+    <field name="inspection_date" eval="(datetime.now(pytz.timezone('Asia/Shanghai')).date() + timedelta(days=-6))" />
+    <field name="inspection_source">manual</field>
+    <field name="date" eval="datetime.combine((datetime.now(pytz.timezone('Asia/Shanghai')).date() + timedelta(days=-6)), datetime.min.time()).replace(hour=1, minute=4)" />
+    <field name="internal_notes">运行状态与前次一致，无新增异常。</field>
+  </record>
+  <function model="qc.inspection" name="action_todo">
+    <value eval="[ref('factory_history_04')]" />
+  </function>
+  <function model="qc.inspection.line" name="write">
+    <function model="qc.inspection.line" name="search" eval="[[('inspection_id', '=', ref('factory_history_04')), ('test_line', '=', ref('factory_question_pump_daily_seal'))]]" />
+    <value eval="{'qualitative_value': ref('factory_question_pump_daily_seal_ok')}" />
+  </function>
+  <function model="qc.inspection.line" name="write">
+    <function model="qc.inspection.line" name="search" eval="[[('inspection_id', '=', ref('factory_history_04')), ('test_line', '=', ref('factory_question_pump_daily_pressure'))]]" />
+    <value eval="{'quantitative_value': 6.05, 'inspection_numeric_answered': True}" />
+  </function>
+  <function model="qc.inspection.line" name="write">
+    <function model="qc.inspection.line" name="search" eval="[[('inspection_id', '=', ref('factory_history_04')), ('test_line', '=', ref('factory_question_pump_daily_sound'))]]" />
+    <value eval="{'qualitative_value': ref('factory_question_pump_daily_sound_ok')}" />
+  </function>
+  <function model="qc.inspection" name="action_confirm">
+    <value eval="[ref('factory_history_04')]" />
+  </function>
+  <function model="qc.inspection" name="write">
+    <value eval="[ref('factory_history_04')]" />
+    <value eval="{'date_done': datetime.combine((datetime.now(pytz.timezone('Asia/Shanghai')).date() + timedelta(days=-6)), datetime.min.time()).replace(hour=2, minute=4)}" />
+  </function>
+  <!-- 05 · P01 · success -->
+  <record id="factory_history_05" model="qc.inspection">
+    <field name="equipment_id" ref="factory_equipment_p01" />
+    <field name="inspection_date" eval="(datetime.now(pytz.timezone('Asia/Shanghai')).date() + timedelta(days=-4))" />
+    <field name="inspection_source">manual</field>
+    <field name="date" eval="datetime.combine((datetime.now(pytz.timezone('Asia/Shanghai')).date() + timedelta(days=-4)), datetime.min.time()).replace(hour=1, minute=5)" />
+    <field name="internal_notes">出口压力在当次标准范围内。</field>
+  </record>
+  <function model="qc.inspection" name="action_todo">
+    <value eval="[ref('factory_history_05')]" />
+  </function>
+  <function model="qc.inspection.line" name="write">
+    <function model="qc.inspection.line" name="search" eval="[[('inspection_id', '=', ref('factory_history_05')), ('test_line', '=', ref('factory_question_pump_daily_seal'))]]" />
+    <value eval="{'qualitative_value': ref('factory_question_pump_daily_seal_ok')}" />
+  </function>
+  <function model="qc.inspection.line" name="write">
+    <function model="qc.inspection.line" name="search" eval="[[('inspection_id', '=', ref('factory_history_05')), ('test_line', '=', ref('factory_question_pump_daily_pressure'))]]" />
+    <value eval="{'quantitative_value': 6.35, 'inspection_numeric_answered': True}" />
+  </function>
+  <function model="qc.inspection.line" name="write">
+    <function model="qc.inspection.line" name="search" eval="[[('inspection_id', '=', ref('factory_history_05')), ('test_line', '=', ref('factory_question_pump_daily_sound'))]]" />
+    <value eval="{'qualitative_value': ref('factory_question_pump_daily_sound_ok')}" />
+  </function>
+  <function model="qc.inspection" name="action_confirm">
+    <value eval="[ref('factory_history_05')]" />
+  </function>
+  <function model="qc.inspection" name="write">
+    <value eval="[ref('factory_history_05')]" />
+    <value eval="{'date_done': datetime.combine((datetime.now(pytz.timezone('Asia/Shanghai')).date() + timedelta(days=-4)), datetime.min.time()).replace(hour=2, minute=5)}" />
+  </function>
+  <!-- 06 · P01 · success -->
+  <record id="factory_history_06" model="qc.inspection">
+    <field name="equipment_id" ref="factory_equipment_p01" />
+    <field name="inspection_date" eval="(datetime.now(pytz.timezone('Asia/Shanghai')).date() + timedelta(days=-2))" />
+    <field name="inspection_source">manual</field>
+    <field name="date" eval="datetime.combine((datetime.now(pytz.timezone('Asia/Shanghai')).date() + timedelta(days=-2)), datetime.min.time()).replace(hour=1, minute=6)" />
+    <field name="internal_notes">日常检查完成，密封及声音无异常。</field>
+  </record>
+  <function model="qc.inspection" name="action_todo">
+    <value eval="[ref('factory_history_06')]" />
+  </function>
+  <function model="qc.inspection.line" name="write">
+    <function model="qc.inspection.line" name="search" eval="[[('inspection_id', '=', ref('factory_history_06')), ('test_line', '=', ref('factory_question_pump_daily_seal'))]]" />
+    <value eval="{'qualitative_value': ref('factory_question_pump_daily_seal_ok')}" />
+  </function>
+  <function model="qc.inspection.line" name="write">
+    <function model="qc.inspection.line" name="search" eval="[[('inspection_id', '=', ref('factory_history_06')), ('test_line', '=', ref('factory_question_pump_daily_pressure'))]]" />
+    <value eval="{'quantitative_value': 6.65, 'inspection_numeric_answered': True}" />
+  </function>
+  <function model="qc.inspection.line" name="write">
+    <function model="qc.inspection.line" name="search" eval="[[('inspection_id', '=', ref('factory_history_06')), ('test_line', '=', ref('factory_question_pump_daily_sound'))]]" />
+    <value eval="{'qualitative_value': ref('factory_question_pump_daily_sound_ok')}" />
+  </function>
+  <function model="qc.inspection" name="action_confirm">
+    <value eval="[ref('factory_history_06')]" />
+  </function>
+  <function model="qc.inspection" name="write">
+    <value eval="[ref('factory_history_06')]" />
+    <value eval="{'date_done': datetime.combine((datetime.now(pytz.timezone('Asia/Shanghai')).date() + timedelta(days=-2)), datetime.min.time()).replace(hour=2, minute=6)}" />
+  </function>
+  <!-- 07 · P01 · ready -->
+  <record id="factory_history_07" model="qc.inspection">
+    <field name="equipment_id" ref="factory_equipment_p01" />
+    <field name="inspection_date" eval="(datetime.now(pytz.timezone('Asia/Shanghai')).date() + timedelta(days=0))" />
+    <field name="inspection_source">manual</field>
+    <field name="date" eval="datetime.combine((datetime.now(pytz.timezone('Asia/Shanghai')).date() + timedelta(days=0)), datetime.min.time()).replace(hour=1, minute=7)" />
+    <field name="internal_notes">今日早班例行检查，等待现场填写。</field>
+  </record>
+  <function model="qc.inspection" name="action_todo">
+    <value eval="[ref('factory_history_07')]" />
+  </function>
+  <!-- 08 · P02 · success -->
+  <record id="factory_history_08" model="qc.inspection">
+    <field name="equipment_id" ref="factory_equipment_p02" />
+    <field name="inspection_date" eval="(datetime.now(pytz.timezone('Asia/Shanghai')).date() + timedelta(days=-9))" />
+    <field name="inspection_source">manual</field>
+    <field name="date" eval="datetime.combine((datetime.now(pytz.timezone('Asia/Shanghai')).date() + timedelta(days=-9)), datetime.min.time()).replace(hour=1, minute=8)" />
+    <field name="internal_notes">专项复查，读数稳定，阀门状态符合运行要求。</field>
+  </record>
+  <function model="qc.inspection" name="action_todo">
+    <value eval="[ref('factory_history_08')]" />
+  </function>
+  <function model="qc.inspection.line" name="write">
+    <function model="qc.inspection.line" name="search" eval="[[('inspection_id', '=', ref('factory_history_08')), ('test_line', '=', ref('factory_question_pump_diagnostic_pressure'))]]" />
+    <value eval="{'quantitative_value': 6.05, 'inspection_numeric_answered': True}" />
+  </function>
+  <function model="qc.inspection.line" name="write">
+    <function model="qc.inspection.line" name="search" eval="[[('inspection_id', '=', ref('factory_history_08')), ('test_line', '=', ref('factory_question_pump_diagnostic_valve'))]]" />
+    <value eval="{'qualitative_value': ref('factory_question_pump_diagnostic_valve_ok')}" />
+  </function>
+  <function model="qc.inspection.line" name="write">
+    <function model="qc.inspection.line" name="search" eval="[[('inspection_id', '=', ref('factory_history_08')), ('test_line', '=', ref('factory_question_pump_diagnostic_display'))]]" />
+    <value eval="{'qualitative_value': ref('factory_question_pump_diagnostic_display_ok')}" />
+  </function>
+  <function model="qc.inspection" name="action_confirm">
+    <value eval="[ref('factory_history_08')]" />
+  </function>
+  <function model="qc.inspection" name="write">
+    <value eval="[ref('factory_history_08')]" />
+    <value eval="{'date_done': datetime.combine((datetime.now(pytz.timezone('Asia/Shanghai')).date() + timedelta(days=-9)), datetime.min.time()).replace(hour=2, minute=8)}" />
+  </function>
+  <!-- 09 · P02 · failed -->
+  <record id="factory_history_09" model="qc.inspection">
+    <field name="equipment_id" ref="factory_equipment_p02" />
+    <field name="inspection_date" eval="(datetime.now(pytz.timezone('Asia/Shanghai')).date() + timedelta(days=-5))" />
+    <field name="inspection_source">manual</field>
+    <field name="date" eval="datetime.combine((datetime.now(pytz.timezone('Asia/Shanghai')).date() + timedelta(days=-5)), datetime.min.time()).replace(hour=1, minute=9)" />
+    <field name="internal_notes">出口压力高于当次上限，保留记录待安排后续处理。</field>
+  </record>
+  <function model="qc.inspection" name="action_todo">
+    <value eval="[ref('factory_history_09')]" />
+  </function>
+  <function model="qc.inspection.line" name="write">
+    <function model="qc.inspection.line" name="search" eval="[[('inspection_id', '=', ref('factory_history_09')), ('test_line', '=', ref('factory_question_pump_diagnostic_pressure'))]]" />
+    <value eval="{'quantitative_value': 8.9, 'inspection_numeric_answered': True}" />
+  </function>
+  <function model="qc.inspection.line" name="write">
+    <function model="qc.inspection.line" name="search" eval="[[('inspection_id', '=', ref('factory_history_09')), ('test_line', '=', ref('factory_question_pump_diagnostic_valve'))]]" />
+    <value eval="{'qualitative_value': ref('factory_question_pump_diagnostic_valve_ok')}" />
+  </function>
+  <function model="qc.inspection.line" name="write">
+    <function model="qc.inspection.line" name="search" eval="[[('inspection_id', '=', ref('factory_history_09')), ('test_line', '=', ref('factory_question_pump_diagnostic_display'))]]" />
+    <value eval="{'qualitative_value': ref('factory_question_pump_diagnostic_display_ok')}" />
+  </function>
+  <function model="qc.inspection" name="action_confirm">
+    <value eval="[ref('factory_history_09')]" />
+  </function>
+  <function model="qc.inspection" name="action_approve">
+    <value eval="[ref('factory_history_09')]" />
+  </function>
+  <function model="qc.inspection" name="write">
+    <value eval="[ref('factory_history_09')]" />
+    <value eval="{'date_done': datetime.combine((datetime.now(pytz.timezone('Asia/Shanghai')).date() + timedelta(days=-5)), datetime.min.time()).replace(hour=2, minute=9)}" />
+  </function>
+  <!-- 10 · P02 · waiting -->
+  <record id="factory_history_10" model="qc.inspection">
+    <field name="equipment_id" ref="factory_equipment_p02" />
+    <field name="inspection_date" eval="(datetime.now(pytz.timezone('Asia/Shanghai')).date() + timedelta(days=0))" />
+    <field name="inspection_source">manual</field>
+    <field name="date" eval="datetime.combine((datetime.now(pytz.timezone('Asia/Shanghai')).date() + timedelta(days=0)), datetime.min.time()).replace(hour=1, minute=10)" />
+    <field name="internal_notes">现场压力再次偏高，阀门状态正常，请主管确认。</field>
+  </record>
+  <function model="qc.inspection" name="action_todo">
+    <value eval="[ref('factory_history_10')]" />
+  </function>
+  <function model="qc.inspection.line" name="write">
+    <function model="qc.inspection.line" name="search" eval="[[('inspection_id', '=', ref('factory_history_10')), ('test_line', '=', ref('factory_question_pump_diagnostic_pressure'))]]" />
+    <value eval="{'quantitative_value': 8.9, 'inspection_numeric_answered': True}" />
+  </function>
+  <function model="qc.inspection.line" name="write">
+    <function model="qc.inspection.line" name="search" eval="[[('inspection_id', '=', ref('factory_history_10')), ('test_line', '=', ref('factory_question_pump_diagnostic_valve'))]]" />
+    <value eval="{'qualitative_value': ref('factory_question_pump_diagnostic_valve_ok')}" />
+  </function>
+  <function model="qc.inspection.line" name="write">
+    <function model="qc.inspection.line" name="search" eval="[[('inspection_id', '=', ref('factory_history_10')), ('test_line', '=', ref('factory_question_pump_diagnostic_display'))]]" />
+    <value eval="{'qualitative_value': ref('factory_question_pump_diagnostic_display_ok')}" />
+  </function>
+  <function model="qc.inspection" name="action_confirm">
+    <value eval="[ref('factory_history_10')]" />
+  </function>
+  <!-- 11 · P03 · failed -->
+  <record id="factory_history_11" model="qc.inspection">
+    <field name="equipment_id" ref="factory_equipment_p03" />
+    <field name="inspection_date" eval="(datetime.now(pytz.timezone('Asia/Shanghai')).date() + timedelta(days=-10))" />
+    <field name="inspection_source">manual</field>
+    <field name="date" eval="datetime.combine((datetime.now(pytz.timezone('Asia/Shanghai')).date() + timedelta(days=-10)), datetime.min.time()).replace(hour=1, minute=11)" />
+    <field name="internal_notes">试运行时连接部位出现松动，停止验收并转维修。</field>
+  </record>
+  <function model="qc.inspection" name="action_todo">
+    <value eval="[ref('factory_history_11')]" />
+  </function>
+  <function model="qc.inspection.line" name="write">
+    <function model="qc.inspection.line" name="search" eval="[[('inspection_id', '=', ref('factory_history_11')), ('test_line', '=', ref('factory_question_pump_acceptance_guard'))]]" />
+    <value eval="{'qualitative_value': ref('factory_question_pump_acceptance_guard_ok')}" />
+  </function>
+  <function model="qc.inspection.line" name="write">
+    <function model="qc.inspection.line" name="search" eval="[[('inspection_id', '=', ref('factory_history_11')), ('test_line', '=', ref('factory_question_pump_acceptance_connection'))]]" />
+    <value eval="{'qualitative_value': ref('factory_question_pump_acceptance_connection_bad')}" />
+  </function>
+  <function model="qc.inspection.line" name="write">
+    <function model="qc.inspection.line" name="search" eval="[[('inspection_id', '=', ref('factory_history_11')), ('test_line', '=', ref('factory_question_pump_acceptance_pressure'))]]" />
+    <value eval="{'quantitative_value': 6.95, 'inspection_numeric_answered': True}" />
+  </function>
+  <function model="qc.inspection" name="action_confirm">
+    <value eval="[ref('factory_history_11')]" />
+  </function>
+  <function model="qc.inspection" name="action_approve">
+    <value eval="[ref('factory_history_11')]" />
+  </function>
+  <function model="qc.inspection" name="write">
+    <value eval="[ref('factory_history_11')]" />
+    <value eval="{'date_done': datetime.combine((datetime.now(pytz.timezone('Asia/Shanghai')).date() + timedelta(days=-10)), datetime.min.time()).replace(hour=2, minute=11)}" />
+  </function>
+  <!-- 12 · P03 · draft -->
+  <record id="factory_history_12" model="qc.inspection">
+    <field name="equipment_id" ref="factory_equipment_p03" />
+    <field name="inspection_date" eval="(datetime.now(pytz.timezone('Asia/Shanghai')).date() + timedelta(days=0))" />
+    <field name="inspection_source">manual</field>
+    <field name="date" eval="datetime.combine((datetime.now(pytz.timezone('Asia/Shanghai')).date() + timedelta(days=0)), datetime.min.time()).replace(hour=1, minute=12)" />
+    <field name="internal_notes">连接部位维修已完成，等待重新验收。</field>
+  </record>
+  <!-- 13 · P04 · success -->
+  <record id="factory_history_13" model="qc.inspection">
+    <field name="equipment_id" ref="factory_equipment_p04" />
+    <field name="inspection_date" eval="(datetime.now(pytz.timezone('Asia/Shanghai')).date() + timedelta(days=-3))" />
+    <field name="inspection_source">manual</field>
+    <field name="date" eval="datetime.combine((datetime.now(pytz.timezone('Asia/Shanghai')).date() + timedelta(days=-3)), datetime.min.time()).replace(hour=1, minute=13)" />
+    <field name="internal_notes">冷却水站例行检查，各项符合当次要求。</field>
+  </record>
+  <function model="qc.inspection" name="action_todo">
+    <value eval="[ref('factory_history_13')]" />
+  </function>
+  <function model="qc.inspection.line" name="write">
+    <function model="qc.inspection.line" name="search" eval="[[('inspection_id', '=', ref('factory_history_13')), ('test_line', '=', ref('factory_question_pump_daily_seal'))]]" />
+    <value eval="{'qualitative_value': ref('factory_question_pump_daily_seal_ok')}" />
+  </function>
+  <function model="qc.inspection.line" name="write">
+    <function model="qc.inspection.line" name="search" eval="[[('inspection_id', '=', ref('factory_history_13')), ('test_line', '=', ref('factory_question_pump_daily_pressure'))]]" />
+    <value eval="{'quantitative_value': 6.35, 'inspection_numeric_answered': True}" />
+  </function>
+  <function model="qc.inspection.line" name="write">
+    <function model="qc.inspection.line" name="search" eval="[[('inspection_id', '=', ref('factory_history_13')), ('test_line', '=', ref('factory_question_pump_daily_sound'))]]" />
+    <value eval="{'qualitative_value': ref('factory_question_pump_daily_sound_ok')}" />
+  </function>
+  <function model="qc.inspection" name="action_confirm">
+    <value eval="[ref('factory_history_13')]" />
+  </function>
+  <function model="qc.inspection" name="write">
+    <value eval="[ref('factory_history_13')]" />
+    <value eval="{'date_done': datetime.combine((datetime.now(pytz.timezone('Asia/Shanghai')).date() + timedelta(days=-3)), datetime.min.time()).replace(hour=2, minute=13)}" />
+  </function>
+  <!-- 14 · P04 · success -->
+  <record id="factory_history_14" model="qc.inspection">
+    <field name="equipment_id" ref="factory_equipment_p04" />
+    <field name="inspection_date" eval="(datetime.now(pytz.timezone('Asia/Shanghai')).date() + timedelta(days=-1))" />
+    <field name="inspection_source">manual</field>
+    <field name="date" eval="datetime.combine((datetime.now(pytz.timezone('Asia/Shanghai')).date() + timedelta(days=-1)), datetime.min.time()).replace(hour=1, minute=14)" />
+    <field name="internal_notes">晚班巡检完成，无渗漏和异响。</field>
+  </record>
+  <function model="qc.inspection" name="action_todo">
+    <value eval="[ref('factory_history_14')]" />
+  </function>
+  <function model="qc.inspection.line" name="write">
+    <function model="qc.inspection.line" name="search" eval="[[('inspection_id', '=', ref('factory_history_14')), ('test_line', '=', ref('factory_question_pump_daily_seal'))]]" />
+    <value eval="{'qualitative_value': ref('factory_question_pump_daily_seal_ok')}" />
+  </function>
+  <function model="qc.inspection.line" name="write">
+    <function model="qc.inspection.line" name="search" eval="[[('inspection_id', '=', ref('factory_history_14')), ('test_line', '=', ref('factory_question_pump_daily_pressure'))]]" />
+    <value eval="{'quantitative_value': 6.65, 'inspection_numeric_answered': True}" />
+  </function>
+  <function model="qc.inspection.line" name="write">
+    <function model="qc.inspection.line" name="search" eval="[[('inspection_id', '=', ref('factory_history_14')), ('test_line', '=', ref('factory_question_pump_daily_sound'))]]" />
+    <value eval="{'qualitative_value': ref('factory_question_pump_daily_sound_ok')}" />
+  </function>
+  <function model="qc.inspection" name="action_confirm">
+    <value eval="[ref('factory_history_14')]" />
+  </function>
+  <function model="qc.inspection" name="write">
+    <value eval="[ref('factory_history_14')]" />
+    <value eval="{'date_done': datetime.combine((datetime.now(pytz.timezone('Asia/Shanghai')).date() + timedelta(days=-1)), datetime.min.time()).replace(hour=2, minute=14)}" />
+  </function>
+  <!-- 15 · P04 · ready -->
+  <record id="factory_history_15" model="qc.inspection">
+    <field name="equipment_id" ref="factory_equipment_p04" />
+    <field name="inspection_date" eval="(datetime.now(pytz.timezone('Asia/Shanghai')).date() + timedelta(days=0))" />
+    <field name="inspection_source">manual</field>
+    <field name="date" eval="datetime.combine((datetime.now(pytz.timezone('Asia/Shanghai')).date() + timedelta(days=0)), datetime.min.time()).replace(hour=1, minute=15)" />
+    <field name="internal_notes">今日冷却水站检查，等待填写。</field>
+  </record>
+  <function model="qc.inspection" name="action_todo">
+    <value eval="[ref('factory_history_15')]" />
+  </function>
+  <!-- 16 · P05 · canceled -->
+  <record id="factory_history_16" model="qc.inspection">
+    <field name="equipment_id" ref="factory_equipment_p05" />
+    <field name="inspection_date" eval="(datetime.now(pytz.timezone('Asia/Shanghai')).date() + timedelta(days=-2))" />
+    <field name="inspection_source">manual</field>
+    <field name="date" eval="datetime.combine((datetime.now(pytz.timezone('Asia/Shanghai')).date() + timedelta(days=-2)), datetime.min.time()).replace(hour=1, minute=16)" />
+    <field name="internal_notes">设备停用待保养，本次检查取消，周期已暂停。</field>
+  </record>
+  <function model="qc.inspection" name="action_cancel">
+    <value eval="[ref('factory_history_16')]" />
+  </function>
+  <!-- 17 · F01 · success -->
+  <record id="factory_history_17" model="qc.inspection">
+    <field name="equipment_id" ref="factory_equipment_f01" />
+    <field name="inspection_date" eval="(datetime.now(pytz.timezone('Asia/Shanghai')).date() + timedelta(days=-7))" />
+    <field name="inspection_source">manual</field>
+    <field name="date" eval="datetime.combine((datetime.now(pytz.timezone('Asia/Shanghai')).date() + timedelta(days=-7)), datetime.min.time()).replace(hour=1, minute=17)" />
+    <field name="internal_notes">东侧排风机运行稳定，防护罩完好。</field>
+  </record>
+  <function model="qc.inspection" name="action_todo">
+    <value eval="[ref('factory_history_17')]" />
+  </function>
+  <function model="qc.inspection.line" name="write">
+    <function model="qc.inspection.line" name="search" eval="[[('inspection_id', '=', ref('factory_history_17')), ('test_line', '=', ref('factory_question_fan_daily_sound'))]]" />
+    <value eval="{'qualitative_value': ref('factory_question_fan_daily_sound_ok')}" />
+  </function>
+  <function model="qc.inspection.line" name="write">
+    <function model="qc.inspection.line" name="search" eval="[[('inspection_id', '=', ref('factory_history_17')), ('test_line', '=', ref('factory_question_fan_daily_guard'))]]" />
+    <value eval="{'qualitative_value': ref('factory_question_fan_daily_guard_ok')}" />
+  </function>
+  <function model="qc.inspection.line" name="write">
+    <function model="qc.inspection.line" name="search" eval="[[('inspection_id', '=', ref('factory_history_17')), ('test_line', '=', ref('factory_question_fan_daily_vibration'))]]" />
+    <value eval="{'quantitative_value': 2.02, 'inspection_numeric_answered': True}" />
+  </function>
+  <function model="qc.inspection" name="action_confirm">
+    <value eval="[ref('factory_history_17')]" />
+  </function>
+  <function model="qc.inspection" name="write">
+    <value eval="[ref('factory_history_17')]" />
+    <value eval="{'date_done': datetime.combine((datetime.now(pytz.timezone('Asia/Shanghai')).date() + timedelta(days=-7)), datetime.min.time()).replace(hour=2, minute=17)}" />
+  </function>
+  <!-- 18 · F01 · success -->
+  <record id="factory_history_18" model="qc.inspection">
+    <field name="equipment_id" ref="factory_equipment_f01" />
+    <field name="inspection_date" eval="(datetime.now(pytz.timezone('Asia/Shanghai')).date() + timedelta(days=-1))" />
+    <field name="inspection_source">manual</field>
+    <field name="date" eval="datetime.combine((datetime.now(pytz.timezone('Asia/Shanghai')).date() + timedelta(days=-1)), datetime.min.time()).replace(hour=1, minute=18)" />
+    <field name="internal_notes">本次巡视未复现此前异响，仍保留待确认记录。</field>
+  </record>
+  <function model="qc.inspection" name="action_todo">
+    <value eval="[ref('factory_history_18')]" />
+  </function>
+  <function model="qc.inspection.line" name="write">
+    <function model="qc.inspection.line" name="search" eval="[[('inspection_id', '=', ref('factory_history_18')), ('test_line', '=', ref('factory_question_fan_daily_sound'))]]" />
+    <value eval="{'qualitative_value': ref('factory_question_fan_daily_sound_ok')}" />
+  </function>
+  <function model="qc.inspection.line" name="write">
+    <function model="qc.inspection.line" name="search" eval="[[('inspection_id', '=', ref('factory_history_18')), ('test_line', '=', ref('factory_question_fan_daily_guard'))]]" />
+    <value eval="{'qualitative_value': ref('factory_question_fan_daily_guard_ok')}" />
+  </function>
+  <function model="qc.inspection.line" name="write">
+    <function model="qc.inspection.line" name="search" eval="[[('inspection_id', '=', ref('factory_history_18')), ('test_line', '=', ref('factory_question_fan_daily_vibration'))]]" />
+    <value eval="{'quantitative_value': 2.48, 'inspection_numeric_answered': True}" />
+  </function>
+  <function model="qc.inspection" name="action_confirm">
+    <value eval="[ref('factory_history_18')]" />
+  </function>
+  <function model="qc.inspection" name="write">
+    <value eval="[ref('factory_history_18')]" />
+    <value eval="{'date_done': datetime.combine((datetime.now(pytz.timezone('Asia/Shanghai')).date() + timedelta(days=-1)), datetime.min.time()).replace(hour=2, minute=18)}" />
+  </function>
+  <!-- 19 · F01 · waiting -->
+  <record id="factory_history_19" model="qc.inspection">
+    <field name="equipment_id" ref="factory_equipment_f01" />
+    <field name="inspection_date" eval="(datetime.now(pytz.timezone('Asia/Shanghai')).date() + timedelta(days=-2))" />
+    <field name="inspection_source">manual</field>
+    <field name="date" eval="datetime.combine((datetime.now(pytz.timezone('Asia/Shanghai')).date() + timedelta(days=-2)), datetime.min.time()).replace(hour=1, minute=19)" />
+    <field name="internal_notes">发现间歇异响，后续检查合格不能代替本次异常确认。</field>
+  </record>
+  <function model="qc.inspection" name="action_todo">
+    <value eval="[ref('factory_history_19')]" />
+  </function>
+  <function model="qc.inspection.line" name="write">
+    <function model="qc.inspection.line" name="search" eval="[[('inspection_id', '=', ref('factory_history_19')), ('test_line', '=', ref('factory_question_fan_daily_sound'))]]" />
+    <value eval="{'qualitative_value': ref('factory_question_fan_daily_sound_bad')}" />
+  </function>
+  <function model="qc.inspection.line" name="write">
+    <function model="qc.inspection.line" name="search" eval="[[('inspection_id', '=', ref('factory_history_19')), ('test_line', '=', ref('factory_question_fan_daily_guard'))]]" />
+    <value eval="{'qualitative_value': ref('factory_question_fan_daily_guard_ok')}" />
+  </function>
+  <function model="qc.inspection.line" name="write">
+    <function model="qc.inspection.line" name="search" eval="[[('inspection_id', '=', ref('factory_history_19')), ('test_line', '=', ref('factory_question_fan_daily_vibration'))]]" />
+    <value eval="{'quantitative_value': 2.93, 'inspection_numeric_answered': True}" />
+  </function>
+  <function model="qc.inspection" name="action_confirm">
+    <value eval="[ref('factory_history_19')]" />
+  </function>
+  <!-- 20 · F02 · ready -->
+  <record id="factory_history_20" model="qc.inspection">
+    <field name="equipment_id" ref="factory_equipment_f02" />
+    <field name="inspection_date" eval="(datetime.now(pytz.timezone('Asia/Shanghai')).date() + timedelta(days=0))" />
+    <field name="inspection_source">manual</field>
+    <field name="date" eval="datetime.combine((datetime.now(pytz.timezone('Asia/Shanghai')).date() + timedelta(days=0)), datetime.min.time()).replace(hour=1, minute=20)" />
+    <field name="internal_notes">双周检查任务已下发，检查前先查看关联维修进展。</field>
+  </record>
+  <function model="qc.inspection" name="action_todo">
+    <value eval="[ref('factory_history_20')]" />
+  </function>
+  <!-- 21 · F03 · success -->
+  <record id="factory_history_21" model="qc.inspection">
+    <field name="equipment_id" ref="factory_equipment_f03" />
+    <field name="inspection_date" eval="(datetime.now(pytz.timezone('Asia/Shanghai')).date() + timedelta(days=-4))" />
+    <field name="inspection_source">manual</field>
+    <field name="date" eval="datetime.combine((datetime.now(pytz.timezone('Asia/Shanghai')).date() + timedelta(days=-4)), datetime.min.time()).replace(hour=1, minute=21)" />
+    <field name="internal_notes">冷却塔风机防护与振动读数符合当次要求。</field>
+  </record>
+  <function model="qc.inspection" name="action_todo">
+    <value eval="[ref('factory_history_21')]" />
+  </function>
+  <function model="qc.inspection.line" name="write">
+    <function model="qc.inspection.line" name="search" eval="[[('inspection_id', '=', ref('factory_history_21')), ('test_line', '=', ref('factory_question_fan_daily_sound'))]]" />
+    <value eval="{'qualitative_value': ref('factory_question_fan_daily_sound_ok')}" />
+  </function>
+  <function model="qc.inspection.line" name="write">
+    <function model="qc.inspection.line" name="search" eval="[[('inspection_id', '=', ref('factory_history_21')), ('test_line', '=', ref('factory_question_fan_daily_guard'))]]" />
+    <value eval="{'qualitative_value': ref('factory_question_fan_daily_guard_ok')}" />
+  </function>
+  <function model="qc.inspection.line" name="write">
+    <function model="qc.inspection.line" name="search" eval="[[('inspection_id', '=', ref('factory_history_21')), ('test_line', '=', ref('factory_question_fan_daily_vibration'))]]" />
+    <value eval="{'quantitative_value': 2.02, 'inspection_numeric_answered': True}" />
+  </function>
+  <function model="qc.inspection" name="action_confirm">
+    <value eval="[ref('factory_history_21')]" />
+  </function>
+  <function model="qc.inspection" name="write">
+    <value eval="[ref('factory_history_21')]" />
+    <value eval="{'date_done': datetime.combine((datetime.now(pytz.timezone('Asia/Shanghai')).date() + timedelta(days=-4)), datetime.min.time()).replace(hour=2, minute=21)}" />
+  </function>
+  <!-- 22 · M01 · failed -->
+  <record id="factory_history_22" model="qc.inspection">
+    <field name="equipment_id" ref="factory_equipment_m01" />
+    <field name="inspection_date" eval="(datetime.now(pytz.timezone('Asia/Shanghai')).date() + timedelta(days=-3))" />
+    <field name="inspection_source">manual</field>
+    <field name="date" eval="datetime.combine((datetime.now(pytz.timezone('Asia/Shanghai')).date() + timedelta(days=-3)), datetime.min.time()).replace(hour=1, minute=22)" />
+    <field name="internal_notes">电机表面温度高于当次上限，已交电气组处理。</field>
+  </record>
+  <function model="qc.inspection" name="action_todo">
+    <value eval="[ref('factory_history_22')]" />
+  </function>
+  <function model="qc.inspection.line" name="write">
+    <function model="qc.inspection.line" name="search" eval="[[('inspection_id', '=', ref('factory_history_22')), ('test_line', '=', ref('factory_question_motor_daily_appearance'))]]" />
+    <value eval="{'qualitative_value': ref('factory_question_motor_daily_appearance_ok')}" />
+  </function>
+  <function model="qc.inspection.line" name="write">
+    <function model="qc.inspection.line" name="search" eval="[[('inspection_id', '=', ref('factory_history_22')), ('test_line', '=', ref('factory_question_motor_daily_sound'))]]" />
+    <value eval="{'qualitative_value': ref('factory_question_motor_daily_sound_ok')}" />
+  </function>
+  <function model="qc.inspection.line" name="write">
+    <function model="qc.inspection.line" name="search" eval="[[('inspection_id', '=', ref('factory_history_22')), ('test_line', '=', ref('factory_question_motor_daily_temperature'))]]" />
+    <value eval="{'quantitative_value': 81.5, 'inspection_numeric_answered': True}" />
+  </function>
+  <function model="qc.inspection" name="action_confirm">
+    <value eval="[ref('factory_history_22')]" />
+  </function>
+  <function model="qc.inspection" name="action_approve">
+    <value eval="[ref('factory_history_22')]" />
+  </function>
+  <function model="qc.inspection" name="write">
+    <value eval="[ref('factory_history_22')]" />
+    <value eval="{'date_done': datetime.combine((datetime.now(pytz.timezone('Asia/Shanghai')).date() + timedelta(days=-3)), datetime.min.time()).replace(hour=2, minute=22)}" />
+  </function>
+  <!-- 23 · I01 · failed -->
+  <record id="factory_history_23" model="qc.inspection">
+    <field name="equipment_id" ref="factory_equipment_i01" />
+    <field name="inspection_date" eval="(datetime.now(pytz.timezone('Asia/Shanghai')).date() + timedelta(days=-6))" />
+    <field name="inspection_source">manual</field>
+    <field name="date" eval="datetime.combine((datetime.now(pytz.timezone('Asia/Shanghai')).date() + timedelta(days=-6)), datetime.min.time()).replace(hour=1, minute=23)" />
+    <field name="internal_notes">压力表示值与参考值偏差过大，需仪表组复核。</field>
+  </record>
+  <function model="qc.inspection" name="action_todo">
+    <value eval="[ref('factory_history_23')]" />
+  </function>
+  <function model="qc.inspection.line" name="write">
+    <function model="qc.inspection.line" name="search" eval="[[('inspection_id', '=', ref('factory_history_23')), ('test_line', '=', ref('factory_question_instrument_appearance'))]]" />
+    <value eval="{'qualitative_value': ref('factory_question_instrument_appearance_ok')}" />
+  </function>
+  <function model="qc.inspection.line" name="write">
+    <function model="qc.inspection.line" name="search" eval="[[('inspection_id', '=', ref('factory_history_23')), ('test_line', '=', ref('factory_question_instrument_display'))]]" />
+    <value eval="{'qualitative_value': ref('factory_question_instrument_display_ok')}" />
+  </function>
+  <function model="qc.inspection.line" name="write">
+    <function model="qc.inspection.line" name="search" eval="[[('inspection_id', '=', ref('factory_history_23')), ('test_line', '=', ref('factory_question_instrument_deviation'))]]" />
+    <value eval="{'quantitative_value': 0.5, 'inspection_numeric_answered': True}" />
+  </function>
+  <function model="qc.inspection" name="action_confirm">
+    <value eval="[ref('factory_history_23')]" />
+  </function>
+  <function model="qc.inspection" name="action_approve">
+    <value eval="[ref('factory_history_23')]" />
+  </function>
+  <function model="qc.inspection" name="write">
+    <value eval="[ref('factory_history_23')]" />
+    <value eval="{'date_done': datetime.combine((datetime.now(pytz.timezone('Asia/Shanghai')).date() + timedelta(days=-6)), datetime.min.time()).replace(hour=2, minute=23)}" />
+  </function>
+  <!-- 24 · I02 · waiting -->
+  <record id="factory_history_24" model="qc.inspection">
+    <field name="equipment_id" ref="factory_equipment_i02" />
+    <field name="inspection_date" eval="(datetime.now(pytz.timezone('Asia/Shanghai')).date() + timedelta(days=-1))" />
+    <field name="inspection_source">manual</field>
+    <field name="date" eval="datetime.combine((datetime.now(pytz.timezone('Asia/Shanghai')).date() + timedelta(days=-1)), datetime.min.time()).replace(hour=1, minute=24)" />
+    <field name="internal_notes">传感器显示间歇跳动，等待主管确认。</field>
+  </record>
+  <function model="qc.inspection" name="action_todo">
+    <value eval="[ref('factory_history_24')]" />
+  </function>
+  <function model="qc.inspection.line" name="write">
+    <function model="qc.inspection.line" name="search" eval="[[('inspection_id', '=', ref('factory_history_24')), ('test_line', '=', ref('factory_question_instrument_appearance'))]]" />
+    <value eval="{'qualitative_value': ref('factory_question_instrument_appearance_ok')}" />
+  </function>
+  <function model="qc.inspection.line" name="write">
+    <function model="qc.inspection.line" name="search" eval="[[('inspection_id', '=', ref('factory_history_24')), ('test_line', '=', ref('factory_question_instrument_display'))]]" />
+    <value eval="{'qualitative_value': ref('factory_question_instrument_display_bad')}" />
+  </function>
+  <function model="qc.inspection.line" name="write">
+    <function model="qc.inspection.line" name="search" eval="[[('inspection_id', '=', ref('factory_history_24')), ('test_line', '=', ref('factory_question_instrument_deviation'))]]" />
+    <value eval="{'quantitative_value': -0.06, 'inspection_numeric_answered': True}" />
+  </function>
+  <function model="qc.inspection" name="action_confirm">
+    <value eval="[ref('factory_history_24')]" />
+  </function>
+</odoo>

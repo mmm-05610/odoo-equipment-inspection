@@ -1,0 +1,32 @@
+<?xml version='1.0' encoding='utf-8'?>
+<odoo noupdate="1">
+  <!-- 周期配置复用设备字段及其校验；不提前创建未来检查单。 -->
+  <record id="factory_equipment_p04" model="maintenance.equipment">
+    <field name="inspection_cycle_enabled" eval="True" />
+    <field name="inspection_cycle_interval" eval="1" />
+    <field name="inspection_cycle_unit" eval="'days'" />
+    <field name="inspection_cycle_start_date" eval="(datetime.now(pytz.timezone('Asia/Shanghai')).date() + timedelta(days=1))" />
+    <field name="inspection_cycle_paused" eval="False" />
+  </record>
+  <record id="factory_equipment_p05" model="maintenance.equipment">
+    <field name="inspection_cycle_enabled" eval="True" />
+    <field name="inspection_cycle_interval" eval="1" />
+    <field name="inspection_cycle_unit" eval="'weeks'" />
+    <field name="inspection_cycle_start_date" eval="(datetime.now(pytz.timezone('Asia/Shanghai')).date() + timedelta(days=-14))" />
+    <field name="inspection_cycle_paused" eval="True" />
+  </record>
+  <record id="factory_equipment_f02" model="maintenance.equipment">
+    <field name="inspection_cycle_enabled" eval="True" />
+    <field name="inspection_cycle_interval" eval="2" />
+    <field name="inspection_cycle_unit" eval="'weeks'" />
+    <field name="inspection_cycle_start_date" eval="(datetime.now(pytz.timezone('Asia/Shanghai')).date() + timedelta(days=7))" />
+    <field name="inspection_cycle_paused" eval="False" />
+  </record>
+  <record id="factory_equipment_f03" model="maintenance.equipment">
+    <field name="inspection_cycle_enabled" eval="True" />
+    <field name="inspection_cycle_interval" eval="1" />
+    <field name="inspection_cycle_unit" eval="'months'" />
+    <field name="inspection_cycle_start_date" eval="(datetime.now(pytz.timezone('Asia/Shanghai')).date() + relativedelta(day=31))" />
+    <field name="inspection_cycle_paused" eval="False" />
+  </record>
+</odoo>
