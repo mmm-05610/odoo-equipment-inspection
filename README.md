@@ -12,7 +12,7 @@
 
 **兼容版本：** Odoo 19 · **模块版本：** 1.0 · **许可证：** AGPL-3
 
-[在线演示](https://odoo.maomaokingdom.top/demo) · [问题反馈](https://github.com/mmm-05610/odoo-equipment-inspection/issues)
+[在线演示](https://odoo.maomaokingdom.top/demo)
 
 ## 安装
 
@@ -110,14 +110,3 @@ odoo -c /path/to/odoo.conf -d inspection_test -i inspection \
 ```
 
 工厂演示数据测试需要初始数据，不应在已被访客操作过的演示库中直接运行。
-
-## 问题反馈
-
-请在 [GitHub Issues](https://github.com/mmm-05610/odoo-equipment-inspection/issues) 提交问题，附上 Odoo 与模块版本、操作步骤、预期结果和实际结果；界面问题可附截图。
-
-## 致谢与许可
-
-- [Odoo](https://github.com/odoo/odoo)：维护保养、ORM、视图、活动与任务调度。
-- [OCA/manufacture](https://github.com/OCA/manufacture/tree/19.0/quality_control_oca)：通用质量检查模块及其贡献者。
-
-本模块采用 [GNU AGPL v3](LICENSE)，贡献记录见 [Contributors](https://github.com/mmm-05610/odoo-equipment-inspection/graphs/contributors)。
