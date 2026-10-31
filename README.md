@@ -1,96 +1,123 @@
 # Equipment Inspection
 
-Odoo 19 设备检查学习 addon，版本 `19.0.1.3`，AGPL-3。复用官方 `maintenance`、OCA `quality_control_oca` 和 `mail`，连接设备、检查、异常维修、周期、日历与活动。
+为 Odoo 19 的维护保养模块增加设备检查功能，将检查方案、现场记录和异常维修关联起来。
 
-## 演示
+本模块复用官方 `maintenance` 的设备与维修请求、OCA `quality_control_oca` 的检查方案与检查记录，以及 `mail` 的活动与消息机制。
 
-[在线演示](https://odoo.maomaokingdom.top/demo)
+- 按设备类别选择检查方案，支持选项判断和数值范围检查。
+- 保存当次检查标准与结果，方案修改不影响历史记录。
+- 检查员填写结果，主管确认异常并转为维修请求。
+- 按天、周、月安排周期检查，支持批量生成和日历查看。
+- 在设备页查看最近结果、待办和检查历史。
 
-| 角色 | 账号 | 密码 |
-| --- | --- | --- |
-| 检查主管 | `inspection.manager` | `InspectionDemo2026!` |
-| 检查员 | `inspection.inspector` | `InspectionDemo2026!` |
+**兼容版本：** Odoo 19 · **模块版本：** 1.0 · **许可证：** AGPL-3
 
-登录后进入「维护保养 → 检查」。两种角色可以分别使用普通窗口和无痕窗口。
-
-1. 主管打开「检查方案」，对比水泵的日常巡检、检修后验收、压力异常排查方案。
-2. 检查员打开 P01 当天的待检查记录，选择「无渗漏」「无异响」，压力填 `6.2`，提交后应为合格。
-3. 主管打开 P02 待确认记录，确认异常并转维修；在维修的「问题描述」查看异常明细，通过「来源检查」返回。
-4. 打开设备 F01 的「检查」页签：最近完成合格与待确认异常同时显示，历史结论不会覆盖未处理任务。
-5. 打开「检查日历」并翻到下月，查看只读未来计划。需要体验到期生成时，将 P04 的首次计划日期设为当天，保存后点击「立即生成到期检查」。
-
-在线初始数据为 3 个团队、12 台设备、9 套方案、24 张检查、8 张维修。后台 cron 关闭，周期生成可手动触发。首页提供访客重置，清除所有访客的本轮操作并使旧登录失效，冷却 5 分钟。请勿录入真实业务或个人资料。
+[在线演示](https://odoo.maomaokingdom.top/demo) · [问题反馈](https://github.com/mmm-05610/odoo-equipment-inspection/issues)
 
 ## 安装
 
-本仓库本身就是一个 addon，技术名称为 `inspection`。不包含 Odoo 服务、第三方 addon 或部署环境。
+### 依赖
 
-需要 Odoo 19，以及 OCA [manufacture](https://github.com/OCA/manufacture) 中的 `quality_control_oca`。本项目验证过的 OCA 提交为 `635f19675e4f606bd719c893175a65305ad562c6`；`maintenance`、`mail` 及其依赖由 Odoo 提供。
+| 模块 | 来源 | 用途 |
+| --- | --- | --- |
+| `maintenance` | Odoo 官方 | 设备、保养团队、维修请求 |
+| `quality_control_oca` | [OCA/manufacture，19.0 分支](https://github.com/OCA/manufacture/tree/19.0/quality_control_oca) | 检查方案、检查项目、检查记录 |
+| `mail` | Odoo 官方 | 消息、活动与负责人提醒 |
 
-将仓库克隆到自定义 addons 路径下，**目录名必须为 `inspection`**：
+OCA 依赖已验证的提交为 [`635f19675e4f`](https://github.com/OCA/manufacture/commit/635f19675e4f606bd719c893175a65305ad562c6)。其他间接依赖由 Odoo 自动安装。
+
+1. 将本仓库克隆到自定义 addons 路径下，目录名必须为 `inspection`：
+
+   ```bash
+   git clone https://github.com/mmm-05610/odoo-equipment-inspection.git custom-addons/inspection
+   ```
+
+2. 将 `custom-addons` 和 OCA `manufacture` 目录加入 Odoo 的 `addons_path`，保留官方 addons 路径。
+3. 重启 Odoo，开启开发者模式，更新应用列表。
+4. 取消应用列表中的默认“应用”筛选，搜索并安装 **Equipment Inspection**。
+
+安装后，功能入口位于 **维护保养 → 检查**。
+
+## 配置
+
+### 人员与检查方案
+
+1. 在用户权限中分配“检查员”或“检查主管”。检查员处理分配给自己的检查，主管管理方案、周期和异常确认。
+2. 打开 **维护保养 → 检查 → 检查方案**，填写方案用途、适用设备类别和检查项目。选项项目设置可选答案及其判定；数值项目设置单位、上下限。
+3. 打开设备的 **检查** 页签，指定默认检查方案和检查主管；设备的技术员作为默认检查员。
+
+### 周期检查
+
+在设备的 **检查** 页签启用周期检查，设置间隔、单位和首次计划日期。关闭周期会保留配置，不影响手动生成检查。
+
+自动生成还需要管理员启用计划操作 **设备检查：按周期生成**，并确保 Odoo 的 cron 线程运行。本模块默认关闭该计划操作。
+
+计划以首次日期为锚点；月末日期会适配当月天数。错过多期时只补最近一期，不一次补齐全部历史。业务日期时区由参数 `inspection.business_timezone` 控制，默认为 `Asia/Shanghai`。
+
+## 使用
+
+### 执行检查
+
+1. 在设备的 **检查** 页签点击 **生成一次检查**，或由主管通过 **检查 → 批量生成** 创建任务。
+2. 检查员打开任务，进入待检查状态，填写必答项目并提交。
+3. 全部通过的记录进入“合格”；存在异常的记录进入“待主管确认”。
+4. 主管确认异常后，可以创建关联维修请求。再次执行转维修会打开原请求，不重复创建。
+5. 维修人员在原生维护保养流程中处理请求，通过“来源检查”返回检查记录。
+
+维修完成不会把历史异常检查改为合格；需要复查时应新建检查。
+
+### 查看历史与计划
+
+- **设备 → 检查页签**：查看最近完成结果、待检查与待确认数量、最近五条记录。
+- **检查 → 检查记录**：查找检查单及关联维修。
+- **检查 → 检查日历**：查看实际检查和未来周期计划。未来计划只读，浏览日历不会提前创建检查单。
+- 检查任务的原生活动显示在设备上，随任务状态和负责人同步。
+
+## 演示数据
+
+[在线演示](https://odoo.maomaokingdom.top/demo) 提供“检查主管”和“检查员”两个登录按钮，可用普通窗口与无痕窗口分别体验。首页可重置数据：会清除所有访客本轮操作并使原登录失效，重置冷却时间为五分钟。
+
+演示场景包含 3 个团队、12 台设备、9 套方案、24 张检查和 8 张维修。建议先体验 P01 的正常检查，再处理 P02 的异常转维修，最后查看 F01 同时存在“最近合格”和“待确认异常”的情况。在线演示关闭自动调度，可手动生成到期检查。
+
+本地首次建库安装时使用 Odoo 的 `--with-demo`，即可加载 manifest 的 `demo` 清单：
+
+| 文件 | 内容 |
+| --- | --- |
+| `demo/inspection_lang_demo.xml` | 演示账号所需的中文语言 |
+| `demo/factory_demo.xml` | 人员、团队、设备、方案和检查项目 |
+| `demo/factory_history_demo.xml` | 检查记录、答案与业务状态流转 |
+| `demo/factory_repair_demo.xml` | 异常转维修、原生报修与团队改派 |
+| `demo/factory_cycle_demo.xml` | 设备周期配置 |
+
+数据通过原生 XML `<record>` 和 `<function>` 加载；提交、确认、转维修调用已有业务方法。`noupdate` 保留升级前的用户修改。日期相对安装日计算，演示阈值不作为实际设备维护标准。
+
+标准安装也会加载依赖模块的 demo。在线站点使用独立空库选择性加载本模块的同一份清单；登录首页与数据库重置服务属于部署环境，不包含在本 addon 中。
+
+## 已知限制
+
+- 一台设备配置一个默认检查方案和一条周期规则。
+- 未来日历计划单次查询上限为 400 天、2000 条；超限时提示截断。
+- 自定义字段和菜单的英文翻译尚不完整。
+- 本项目用于学习与演示，尚未完成生产环境长期运行及压力验证。
+
+## 开发与测试
+
+测试位于 `tests/`，覆盖检查流程、权限、标准快照、异常维修、周期、日历和活动。准备好依赖与数据库连接配置后，可在独立测试库执行：
 
 ```bash
-git clone https://github.com/mmm-05610/odoo-equipment-inspection.git custom-addons/inspection
+odoo -c /path/to/odoo.conf -d inspection_test -i inspection \
+  --with-demo --test-enable --test-tags /inspection --stop-after-init
 ```
 
-把 `custom-addons` 和 OCA manufacture 目录加入 Odoo 的 `addons_path`，保留官方 addons 路径。更新应用列表，取消默认「应用」筛选，搜索并安装「Equipment Inspection」。这是扩展模块，入口位于「维护保养」，不会单独出现一个顶层应用。
+工厂演示数据测试需要初始数据，不应在已被访客操作过的演示库中直接运行。
 
-自动周期检查需要启用计划操作「设备检查：按周期生成」，并让 Odoo 的 cron 线程运行；仅勾选设备周期不会启动后台调度。
+## 问题反馈
 
-## 模型扩展点
+请在 [GitHub Issues](https://github.com/mmm-05610/odoo-equipment-inspection/issues) 提交问题，附上 Odoo 与模块版本、操作步骤、预期结果和实际结果；界面问题可附截图。
 
-本 addon 用 `_inherit` 扩展现有模型，只新增一个批量向导；不新建“检查单据”模型，不复制 OCA 源码。
+## 致谢与许可
 
-| 文件 | 运行时模型 | 主要职责 |
-| --- | --- | --- |
-| `models/maintenance.py` | `maintenance.equipment`、`maintenance.request` | 设备默认方案、检查主管、周期配置与锚点日期算法、页签摘要；维修请求的“来源检查”与看板来源标签 |
-| `models/qc_test.py` | `qc.test` | “用于设备检查”标记、适用设备类别、使用说明、必填项目校验 |
-| `models/qc_inspection.py` | `qc.inspection` | 设备生成入口（手动/批量/周期共用）、状态与权限校验、当次主管快照、周期去重、取消补建、异常转维修 |
-| `models/qc_inspection_line.py` | `qc.inspection.line` | 当次标准/答案/单位快照、零值回答、结果冻结、跨单位判定 |
-| `models/inspection_calendar.py` | `qc.inspection`、`maintenance.equipment` | 原生日历的展示字段与只读 RPC `get_cycle_plan_preview`；未来计划现算，不落库 |
-| `models/inspection_activity.py` | `mail.activity`、`qc.inspection` | 每个检查单至多一个原生活动；类型/负责人随状态同步，完成拦截，幂等回填 |
-| `wizard/generate.py` | `inspection.generate` | 批量“临时检查/到期检查”入口，调用与 cron 相同的生成方法 |
+- [Odoo](https://github.com/odoo/odoo)：维护保养、ORM、视图、活动与任务调度。
+- [OCA/manufacture](https://github.com/OCA/manufacture/tree/19.0/quality_control_oca)：通用质量检查模块及其贡献者。
 
-前端只做原生日历的局部扩展（`static/src/js/inspection_calendar_*.js`、`static/src/xml/inspection_calendar_templates.xml`）：切换月/周/日时按可见范围调用 RPC，合并“计划”项；不新建持久化日历模型或镜像表。
-
-## 周期规则摘要
-
-- 一台设备一个默认方案、一条周期规则：启用、间隔（正整数）、单位（天/周/月）、首次计划日期（锚点）、只读的下次计划日期、暂停。
-- 所有计划日期从锚点用 `dateutil.relativedelta` 推算，不从上次执行日累加；每月 31 日会得到 2 月末、3 月 31 日，不漂移。
-- 一个共享 `ir.cron`（“设备检查：按周期生成”）扫描所有到期设备，不给每台设备建 cron；`data/cron.xml` 默认 `active=False`。
-- 生成时对设备行加锁，并用 `(equipment_id, inspection_cycle_date)` 条件唯一索引兜底；重复/并发触发返回同一张检查单。
-- 生成失败不推进下次日期，错误写入设备 `inspection_cycle_last_error`，下次可重试。
-- 停机错过多期只补最近一期，下一次日期推进到未来；暂停不生成，恢复同样只补最近一期。
-- 取消周期检查不回退计划、调度不自动补回；检查主管可在已取消记录上“补建本期检查”。
-- 周期配置只允许“检查主管”修改；配置变更会重算后续计划，但不改历史检查的标准和结果。
-- 业务日期使用 `ir.config_parameter` 的 `inspection.business_timezone`（默认 `Asia/Shanghai`），不随访问者时区变化。
-
-## 演示数据与初始化
-
-`demo/factory_demo.xml` 定义工厂基础资料；`demo_seed.py` 通过实际业务动作生成历史、维修和活动。`demo/inspection_lang_demo.xml` 启用中文。只保留这一套业务 demo。
-
-普通安装不加载 demo 时不会创建演示记录。启用 demo 的首次安装由 Odoo 读取 manifest 的 `demo` 文件，再由 `post_init_hook` 补齐历史；可能同时存在上游 addon 的演示数据。公开演示使用独立的干净数据初始化流程，其部署与重置服务不属于本 addon。
-
-## 验证
-
-2026-10-31：单开关调整后 86 项 post-install 测试通过；维修跳转修正后 24 项集成测试通过。网页已实际验证检查提交、异常转维修、返回专用表单、日历、周期、活动与权限。在线演示的访客重置和两套账号重登已实测。上述测试属于不同轮次，不相加为一个完整套件数量。
-
-测试源码在 `tests/`，运行时需要真实 Odoo 19、PostgreSQL 和上述依赖，可在独立测试数据库中通过 Odoo 的 `--test-enable --test-tags /inspection` 执行。工厂 demo 的初始分布测试需要相应的干净演示数据，不能对已被操作过的演示库直接套用。
-
-## 复用决定
-
-| 需求 | 采用 | 不采用 |
-| --- | --- | --- |
-| 日期计算 | Python `dateutil.relativedelta`，统一从锚点计算 | 自写日期增量、OCA `base_recurrence` 旧实现 |
-| 调度 | 原生 `ir.cron` 单共享任务 | APScheduler 等外部调度 |
-| 提醒 | 原生 `mail.activity`，最小 `inspection_id` 关联 | 自建通知/待办模型 |
-| 日历 | 原生 Calendar 视图 + JS 局部扩展 + 只读 RPC | 持久化 `inspection.calendar.event` 镜像、自写 OWL 日历 |
-| 周期计划 | 设备上的周期字段 | OCA `maintenance_plan`（其生成面向维修请求，业务对象与提前生成策略不同） |
-| 检查业务 | OCA `qc.test`/`qc.inspection`/`qc.inspection.line` | 自建检查模板/检查单/结果模型 |
-
-## 范围与限制
-
-- 原生日历真实记录需经详情进入；未来计划只读，范围上限 400 天 / 2000 条。
-- 自写字段仍有中文硬编码，英文界面不是完整英文。
-- 本轮没有启动演示库后台调度，未做长期跨月实际运行、多进程压力或生产验收。
-- 历史版本升级脚本保留，但当前工厂 demo 采用干净库初始化，不把新 demo 灌入旧学习记录。
+本模块采用 [GNU AGPL v3](LICENSE)，贡献记录见 [Contributors](https://github.com/mmm-05610/odoo-equipment-inspection/graphs/contributors)。
